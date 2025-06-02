@@ -1,0 +1,21 @@
+---
+title: Architecture
+description: Overview of the ASL Methods Section Generator architecture
+---
+
+
+The current architecture of the ASL Methods Section Generator is designed to be modular and extensible,
+allowing for easy updates and integration of new features.
+
+![Architecture](../assets/arch.png)
+
+The architecture consists of the following main components:
+- Core Files
+- Input/Output Services: Handles reading and writing of files and data.
+- Sequence: Manage handling of sequences, including parsing and validation.
+- Modalities: Manage different modalities (e.g., ASL, DSC) and their specific requirements.
+- Converters: Convert data between different formats and structures.
+- Validators: Validate the data and ensure it meets the required standards.
+- Utilities: Provide common functions and utilities used across the package.
+- Tests: Contains unit tests to ensure the functionality of the package.
+- CLI: Command Line Interface for interacting with the package from the terminal.
