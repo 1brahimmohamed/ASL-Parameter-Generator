@@ -6,7 +6,7 @@
     "group": "Introduction",
     "pages": [
       {
-        "title": "Getting to know docs.page",
+        "title": "ASL Parameter Generator",
         "href": "/",
         "icon": "rocket"
       }
@@ -19,12 +19,12 @@
       {
         "title": "Package",
         "href": "/user-guide/package",
-        "icon": "package"
+        "icon": "cubes"
       },
       {
         "title": "UI",
         "href": "/user-guide/ui",
-        "icon": "ui"
+        "icon": "tv"
       }
     ]
   },
@@ -34,12 +34,12 @@
       {
         "title": "Getting Started",
         "href": "/development/getting-started",
-        "icon": "start"
+        "icon": "arrow-up-right-from-square"
       },
       {
         "title": "Architecture",
         "href": "/development/architecture",
-        "icon": "architecture"
+        "icon": "sitemap"
       }
     ]
   }

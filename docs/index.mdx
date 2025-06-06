@@ -5,8 +5,10 @@ description: Welcome to ASL Methods Section Generator
 
 The ASL Methods Section Generator Project is a tool designed to assist authors in creating the methods section of their academic papers. 
 It streamlines the process by providing a structured format and prompts to ensure that all necessary information is included in 
-the methods section. This tool is particularly useful for researchers who may struggle with organizing their methods or ensuring that they meet the standards of their field.
-
+the methods section. This tool extracts and formats key imaging parameters from DICOM and BIDS images. It is intended to aid
+researchers in correctly report about ASL acquisition parameters in a standardized way, contributing to the broader goal of harmonization in perfusion MRI studies.
+It also allows you to generate an ASL parameter report to be copied into the Methods section of paper.
+It validates the ASL datasets by checking for inconsistencies, invalid values, and providing warnings for slight variations.
 
 ## Features
 - **Structured Format**: The generator provides a clear structure for the methods section, making it easier to organize your thoughts and information.
@@ -17,12 +19,16 @@ the methods section. This tool is particularly useful for researchers who may st
 
 ## Project Structure
 The project is organized into several key components:
-- ** Python Package**: This is the core package that contains the functionality for generating the methods section, checking for errors, and converting DICOM files.
-- ** Frontend**: The frontend provides a user interface for interacting with the generator, allowing users to input their data and receive the generated methods section.
-- ** Backend**: The backend handles the API calls and processes the data from the frontend and consumes the Python package to generate the methods section.
+- **Python Package**: This is the core package that contains the functionality for generating the methods section, checking for errors, and converting DICOM files.
+- **Frontend**: The frontend provides a user interface for interacting with the generator, allowing users to input their data and receive the generated methods section.
+- **Backend**: The backend handles the API calls and processes the data from the frontend and consumes the Python package to generate the methods section.
 
 
-Citing ASL Methods Section Generator
+## Acknowledgements
+This project has been developed by [Hanliang Xi](https://hanliang-xu.github.io/#/) and [Ibrahim Abdelazim](https://www.ibrahim-abdelazim.de/) under the mentorship and supervision of Jan Petr,
+David Thomas, and the OSIPI TF 4.1 ASL Lexicon as part of Google Summer of Code 2024/2025 projects. Their guidance and support have been invaluable throughout the development process.
+
+## Citing ASL Methods Section Generator
 If you use the ASL Methods Section Generator in your research, please cite it as follows:
 
 ```bibtex
