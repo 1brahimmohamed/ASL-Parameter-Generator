@@ -1,6 +1,21 @@
 {
   "name": "ASL Parameter Generator Documentation",
   "description": "Documentation for the ASL Parameter Generator, a tool for generating parameters for ASL MRI.",
+  "favicon": "/assets/favicon.ico",
+  "logo": {
+    "light": "/assets/logo_black.png",
+    "dark": "/assets/logo_white.png"
+  },
+  "theme": {
+    "defaultTheme": "dark",
+    "primary": "#0D47A1",
+    "primaryDark": "#49addb",
+    "primaryLight": "##19305c"
+  },
+  "social": {
+    "x": "@OSIPI_ISMRM",
+    "github": "OSIPI"
+  },
   "sidebar": [
   {
     "group": "Introduction",
@@ -25,6 +40,11 @@
         "title": "UI",
         "href": "/user-guide/ui",
         "icon": "tv"
+      },
+      {
+        "title": "Sample data",
+        "href": "/user-guide/sample-data",
+        "icon": "database"
       }
     ]
   },
