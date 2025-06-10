@@ -1,0 +1,13 @@
+[project]
+name = "ASL Methods Parameter Generator"
+version = "0.0.1"
+description = "A Python package for generating methods sections in for ASL parameters."
+authors = [{ name="Ibrahim Abdelazim", email="ibrahim.abdelazim@fau.de" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = []
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

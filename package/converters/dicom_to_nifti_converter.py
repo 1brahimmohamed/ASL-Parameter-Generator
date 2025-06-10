@@ -1,36 +1,34 @@
-import os
-import pydicom
 import json
-import subprocess
+import os
 import re
+import subprocess
 import tempfile
-from .base_converter import BaseConverter
+import pydicom
 
-class DICOM2NiftiConverter(BaseConverter):
+class DICOM2NiFTIConverter:
+    """
+    Converts DICOM files to NIfTI format.
+    """
 
-    def __init__(self, dcm_files, upload_folder, nifti_file):
-        self.dcm_files = dcm_files
-        self.upload_folder = upload_folder
-        self.nifti_file = nifti_file
-
-    def convert(self):
+    @staticmethod
+    def convert(dcm_files, nifti_file=None, converted_files_location="/tmp/upload"):
+        """
+        Convert DICOM files to NIfTI format.
+        """
         converted_files = []
         converted_filenames = []
-        nifti_file_assigned = self.nifti_file
+        nifti_file_assigned = nifti_file
         processed_series = set()
         series_repetitions = {}
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            for dcm_file in self.dcm_files:
-                dcm_filepath = os.path.join(temp_dir, dcm_file.filename)
-                dcm_file.save(dcm_filepath)
+            for dcm_file in dcm_files:
 
-                # Read DICOM file header
-                ds = pydicom.dcmread(dcm_filepath)
-                series_number_element = ds.get((0x0020, 0x0011), None)
+                ds = pydicom.dcmread(dcm_file)
+                series_number_tag = ds.get((0x0020, 0x0011), None)
 
-                if series_number_element:
-                    series_number = series_number_element.value
+                if series_number_tag:
+                    series_number = series_number_tag.value
                     if series_number in processed_series:
                         continue  # Skip processing if this series has already been processed
 
@@ -48,15 +46,15 @@ class DICOM2NiftiConverter(BaseConverter):
 
             # Check if there are any DICOM files in the temporary directory
             if not os.listdir(temp_dir):
-                return None, None, self.nifti_file, "nifti", "No DICOM files found."
+                return None, None, nifti_file, "nifti", "No DICOM files found."
 
-            # Ensure upload_folder exists
-            os.makedirs(self.upload_folder, exist_ok=True)
+            # Ensure converted_files_location exists
+            os.makedirs(converted_files_location, exist_ok=True)
 
             # Run dcm2niix on the temporary directory with the DICOM files
             try:
                 result = subprocess.run(
-                    ['dcm2niix', '-z', 'y', '-o', self.upload_folder, temp_dir],
+                    ['dcm2niix', '-z', 'y', '-o', converted_files_location, temp_dir],
                     check=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
@@ -64,10 +62,10 @@ class DICOM2NiftiConverter(BaseConverter):
                 print(result.stdout.decode())
             except subprocess.CalledProcessError as e:
                 print(f"Error: {e.stderr.decode()}")
-                return None, None, self.nifti_file, None, e.stderr.decode()
+                return None, None, nifti_file, None, e.stderr.decode()
 
             # Collect the converted files
-            for root, dirs, files in os.walk(self.upload_folder):
+            for root, dirs, files in os.walk(converted_files_location):
                 for file in files:
                     file_path = os.path.join(root, file)
                     if file.endswith('.nii') or file.endswith('.nii.gz'):
@@ -87,7 +85,7 @@ class DICOM2NiftiConverter(BaseConverter):
                         converted_filenames.append(file)
                     else:
                         print(f"Error: Unexpected file format {file_path}")
-                        return None, None, self.nifti_file, None, f"Unexpected file format: {file_path}"
+                        return None, None, nifti_file, None, f"Unexpected file format: {file_path}"
 
         if nifti_file_assigned is None:
             return None, None, None, "nifti", "No NIfTI file was generated."

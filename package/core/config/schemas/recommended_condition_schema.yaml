@@ -1,44 +1,37 @@
 recommended_condition_schema:
   BackgroundSuppressionNumberPulses:
-    BackgroundSuppression:
-      True
+    BackgroundSuppression: true
   BackgroundSuppressionPulseTime:
-    BackgroundSuppression:
-      True
-  LabelingLocationDescription: "all"
-  VascularCrushing: "all"
+    BackgroundSuppression: true
+  LabelingLocationDescription: all
+  VascularCrushing: all
   VascularCrushingVENC:
-    VascularCrushing:
-      True
+    VascularCrushing: true
   PCASLType:
-    ArterialSpinLabelingType:
-      "PCASL"
+    ArterialSpinLabelingType: PCASL
   CASLType:
-    ArterialSpinLabelingType:
-      "CASL"
-  LabelingDistance: "all"
+    ArterialSpinLabelingType: CASL
+  LabelingDistance: all
   LabelingPulseAverageGradient:
     ArterialSpinLabelingType:
-      ["PCASL"]
+      - PCASL
   LabelingPulseMaximumGradient:
     ArterialSpinLabelingType:
-      ["PCASL"]
+      - PCASL
   LabelingPulseAverageB1:
     ArterialSpinLabelingType:
-      ["PCASL"]
+      - PCASL
   LabelingPulseFlipAngle:
     ArterialSpinLabelingType:
-      ["PCASL"]
+      - PCASL
   LabelingPulseInterval:
     ArterialSpinLabelingType:
-      ["PCASL"]
+      - PCASL
   LabelingPulseDuration:
     ArterialSpinLabelingType:
-      ["PCASL"]
+      - PCASL
   PASLType:
-    ArterialSpinLabelingType:
-      "PASL"
+    ArterialSpinLabelingType: PASL
   LabelingSlabThickness:
-    ArterialSpinLabelingType:
-      "PASL"
-  AcquisitionDuration: "all"
+    ArterialSpinLabelingType: PASL
+  AcquisitionDuration: all

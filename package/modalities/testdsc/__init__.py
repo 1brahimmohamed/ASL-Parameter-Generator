@@ -2,7 +2,7 @@ from . import processor, validator
 from package.modalities.registry import register_modality
 
 register_modality(
-    name="asl",
-    processor_cls=processor.ASLProcessor,
-    validator_cls=validator.ASLValidator
+    name="test-dsc",
+    processor_cls=processor.DSCProcessor,
+    validator_cls=validator.DSCValidator
 )

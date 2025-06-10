@@ -1,29 +1,27 @@
 import nibabel as nib
-from package.core.exceptions import ReaderError
-from package.core.logging import get_logger
-from .base_reader import BaseReader
 
-logger = get_logger(__name__)
 
-class NiftiReader(BaseReader):
+class NiftiReader:
+    """
+    A class to read NIfTI files.
+    This is a placeholder for the actual implementation.
+    """
 
-    def __init__(self):
-        logger.debug("Initialized NIfTIReader")
-
-    def read(self, nifti_file_path: str):
-        """
-        Read NIfTI data from the input path and return it in a standardized format.
-        Args:
-            nifti_file_path (str): Path to the NIfTI file (.nii or .nii.gz)
-        Returns:
-            Nifti Image (nib.Nifti1Image): Loaded NIfTI image object
-        """
-        if not isinstance(nifti_file_path, str) or not nifti_file_path.endswith(('.nii', '.nii.gz')):
-            raise ReaderError(f"Invalid NIfTI file path: {nifti_file_path}")
-
+    @staticmethod
+    def read(nifti_file):
         try:
-            return nib.load(nifti_file_path)
-        except Exception as e:
-            logger.error(f"Failed to read NIfTI file {nifti_file_path}: {e}")
-            raise ReaderError(f"Failed to read NIfTI file: {e}") from e
+            if isinstance(nifti_file, str):
+                if not nifti_file.endswith(('.nii', '.nii.gz')):
+                    return None, f"Invalid file: {nifti_file}"
 
+                nifti_filepath = nifti_file
+
+            else:
+                raise ValueError("Unsupported file type. Expected a string path to a NIfTI file.")
+
+            nifti_img = nib.load(nifti_filepath)
+            slice_count = nifti_img.shape[2]
+            return slice_count
+
+        except Exception as e:
+            raise RuntimeError(f"Error reading NIfTI file: {str(e)}") from e

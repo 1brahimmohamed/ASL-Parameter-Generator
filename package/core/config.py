@@ -21,7 +21,7 @@ class Config:
         with open(path, 'r') as f:
             content = yaml.safe_load(f)
 
-        if not isinstance(content, dict) or 'allowed_file_types' not in content:
+        if not isinstance(content, dict):
             raise ConfigurationError(f"Invalid config file: {path}")
 
         return content
@@ -56,11 +56,9 @@ class Config:
         allowed_file_types = self._load_yaml_file(self.allowed_file_types_path)
         schemas = self._load_schemas()
 
-        print(allowed_file_types)
-        print(schemas)
-
         return {
             'allowed_file_type': allowed_file_types['allowed_file_types'],
+            'paths': allowed_file_types['paths'],
             'schemas': schemas
         }
 

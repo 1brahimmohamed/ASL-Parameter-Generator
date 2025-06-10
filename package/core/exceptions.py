@@ -19,3 +19,8 @@ class ProcessorError(ASLParamGeneratorError):
 class ConfigurationError(ASLParamGeneratorError):
     """Raised for configuration-related issues."""
     pass
+
+
+class InvalidFileFormatError(ASLParamGeneratorError):
+    """Raised when the file format is invalid or unsupported."""
+    pass
