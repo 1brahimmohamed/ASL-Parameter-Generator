@@ -1,6 +1,7 @@
 "use client"
 
-import * as React from "react"
+import React, {useState, useEffect} from "react"
+
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -13,10 +14,10 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import {Button} from "@/components/ui/button"
+import {Checkbox} from "@/components/ui/checkbox"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -26,7 +27,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+import {Input} from "@/components/ui/input"
 import {
     Table,
     TableBody,
@@ -35,6 +36,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import {useAppContext} from "@/providers/AppProvider";
+import {IReportApiResponse} from "@/types";
+import {mapAslParametersToTable} from "@/utils";
 
 const data: Parameter[] = [
     {
@@ -109,16 +113,17 @@ const data: Parameter[] = [
     },
 ]
 
+
 export type Parameter = {
     id: string
     parameter: string
     value: string
 }
 
-export const columns: ColumnDef<Parameter>[] = [
+export const columns: ColumnDef<unknown, any>[] = [
     {
         id: "select",
-        header: ({ table }) => (
+        header: ({table}) => (
             <Checkbox
                 checked={
                     table.getIsAllPageRowsSelected() ||
@@ -128,7 +133,7 @@ export const columns: ColumnDef<Parameter>[] = [
                 aria-label="Select all"
             />
         ),
-        cell: ({ row }) => (
+        cell: ({row}) => (
             <Checkbox
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -140,29 +145,29 @@ export const columns: ColumnDef<Parameter>[] = [
     },
     {
         accessorKey: "parameter",
-        header: ({ column }) => {
+        header: ({column}) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Parameter<ArrowUpDown />
+                    Parameter<ArrowUpDown/>
                 </Button>
             )
         },
-        cell: ({ row }) => <div>{row.getValue("parameter")}</div>,
+        cell: ({row}) => <div>{row.getValue("parameter")}</div>,
     },
     {
         accessorKey: "value",
         header: "Value",
-        cell: ({ row }) => (
+        cell: ({row}) => (
             <div className="capitalize">{row.getValue("value")}</div>
         ),
     },
     {
         id: "actions",
         enableHiding: false,
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const payment = row.original
 
             return (
@@ -170,7 +175,7 @@ export const columns: ColumnDef<Parameter>[] = [
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
-                            <MoreHorizontal />
+                            <MoreHorizontal/>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -180,7 +185,7 @@ export const columns: ColumnDef<Parameter>[] = [
                         >
                             Copy payment ID
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator/>
                         <DropdownMenuItem>View customer</DropdownMenuItem>
                         <DropdownMenuItem>View payment details</DropdownMenuItem>
                     </DropdownMenuContent>
@@ -191,16 +196,28 @@ export const columns: ColumnDef<Parameter>[] = [
 ]
 
 export default function ParametersTable() {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
     )
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
+        useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = useState({})
+    const [tableData, setTableData] = useState<Parameter[]>(data);
+
+    const {apiData} = useAppContext();
+
+    useEffect(() => {
+        if (apiData && apiData.asl_parameters) {
+            const mappedData = mapAslParametersToTable(apiData.asl_parameters);
+            console.log("Mapped Data:", mappedData);
+            setTableData(mappedData);
+        }
+    }, [apiData]);
+
 
     const table = useReactTable({
-        data,
+        data: tableData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -232,7 +249,7 @@ export default function ParametersTable() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
-                            Columns <ChevronDown />
+                            Columns <ChevronDown/>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

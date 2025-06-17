@@ -32,6 +32,9 @@ class ASLProcessor(BaseProcessor):
         :param data: The input data to be processed.
         """
 
+        # create tmp upload folder if it does not exist
+        os.makedirs("/tmp/upload", exist_ok=True)
+
         # extract filenames from data["files"] which is a paths to the files if available
         files = data["files"] if hasattr(data, 'files') else []
         data['filenames'] = [os.path.basename(path) for path in files]

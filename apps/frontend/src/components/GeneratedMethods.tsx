@@ -1,25 +1,37 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { ClipboardCopy } from "lucide-react";
+import {useState, useRef, useEffect} from "react";
+import {Textarea} from "@/components/ui/textarea";
+import {Card} from "./ui/card";
+import {Button} from "./ui/button";
+import {ClipboardCopy} from "lucide-react";
+import {toast} from 'react-hot-toast';
 
-export default function GeneratedMethods() {
-    const [text, setText] = useState("");
+export default function GeneratedMethods({text: initialText}: { text: string }) {
+    const [text, setText] = useState(initialText);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+        setText(initialText);
+        if (initialText !== "") {
+            setIsEditing(true);
+        } else {
+            setIsEditing(false);
+        }
+    }, [initialText]);
 
     const handleCopy = () => {
         if (textareaRef.current) {
             navigator.clipboard.writeText(textareaRef.current.value)
                 .then(() => {
-                    // Optional: Add visual feedback for successful copy
                     console.log("Text copied to clipboard");
                 })
                 .catch(err => {
                     console.error("Failed to copy text: ", err);
                 });
+
+            toast.success("Methods copied to clipboard!");
         }
     };
 
@@ -32,13 +44,13 @@ export default function GeneratedMethods() {
                 className="absolute top-2 right-2 z-10 hover:bg-gray-200 dark:hover:bg-gray-700"
                 aria-label="Copy to clipboard"
             >
-                <ClipboardCopy className="h-4 w-4" />
+                <ClipboardCopy className="h-4 w-4"/>
             </Button>
             <Textarea
                 ref={textareaRef}
-                className="w-full h-full border-none shadow-none bg-transparent dark:text-gray-200 dark:placeholder-gray-400"
+                className="w-full md:text-lg h-full border-none shadow-none bg-transparent dark:text-gray-200 dark:placeholder-gray-400 text-lg"
                 placeholder="Generated methods will appear here..."
-                readOnly
+                readOnly={!isEditing}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
             />
