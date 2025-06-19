@@ -1,4 +1,4 @@
-from package.modalities.base_processor import BaseProcessor
+from pyaslreport.modalities.base_processor import BaseProcessor
 
 
 class DSCProcessor(BaseProcessor):

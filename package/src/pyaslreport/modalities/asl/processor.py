@@ -3,18 +3,18 @@ import math
 import os
 from typing import Any, Dict
 
-from package.converters.dicom_to_nifti_converter import DICOM2NiFTIConverter
-from package.io.readers.nifti_reader import NiftiReader
-from package.io.writers.json_writer import JSONWriter
-from package.io.writers.report_writer import ReportWriter
-from package.modalities.asl.report_generator import ReportGenerator
-from package.modalities.asl.utils import ASLUtils
-from package.modalities.asl.validator import ASLValidator
-from package.modalities.base_processor import BaseProcessor
-from package.modalities.asl.constants import DURATION_OF_EACH_RFBLOCK
-from package.utils.general_utils import GeneralUtils
-from package.utils.unit_conversion_utils import UnitConverterUtils
-from package.core.config import config
+from pyaslreport.converters.dicom_to_nifti_converter import DICOM2NiFTIConverter
+from pyaslreport.io.readers.nifti_reader import NiftiReader
+from pyaslreport.io.writers.json_writer import JSONWriter
+from pyaslreport.io.writers.report_writer import ReportWriter
+from pyaslreport.modalities.asl.report_generator import ReportGenerator
+from pyaslreport.modalities.asl.utils import ASLUtils
+from pyaslreport.modalities.asl.validator import ASLValidator
+from pyaslreport.modalities.base_processor import BaseProcessor
+from pyaslreport.modalities.asl.constants import DURATION_OF_EACH_RFBLOCK
+from pyaslreport.utils.general_utils import GeneralUtils
+from pyaslreport.utils.unit_conversion_utils import UnitConverterUtils
+from pyaslreport.core.config import config
 
 
 class ASLProcessor(BaseProcessor):
@@ -34,10 +34,6 @@ class ASLProcessor(BaseProcessor):
 
         # create tmp upload folder if it does not exist
         os.makedirs("/tmp/upload", exist_ok=True)
-
-        # extract filenames from data["files"] which is a paths to the files if available
-        files = data["files"] if hasattr(data, 'files') else []
-        data['filenames'] = [os.path.basename(path) for path in files]
 
         super().__init__(data)
 
@@ -118,7 +114,7 @@ class ASLProcessor(BaseProcessor):
             session['PLDType'] = ASLUtils.determine_pld_type(session)
 
         # Clean up upload folder
-        GeneralUtils.clean_up_folder("/tmp/upload")
+        # GeneralUtils.clean_up_folder("/tmp/upload")
 
         m0_type = None
         global_pattern = None

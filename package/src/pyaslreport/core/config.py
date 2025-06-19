@@ -1,6 +1,7 @@
 import os
 import yaml
-from .exceptions import ConfigurationError
+
+from pyaslreport.core.exceptions import ConfigurationError
 
 
 class Config:
@@ -25,7 +26,6 @@ class Config:
             raise ConfigurationError(f"Invalid config file: {path}")
 
         return content
-
 
     def _load_schemas(self) -> dict:
         """

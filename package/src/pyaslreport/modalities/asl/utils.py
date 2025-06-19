@@ -1,7 +1,7 @@
 import os
-from package.core.config import config
+from pyaslreport.core.config import config
 
-from package.io.readers.file_reader import FileReader
+from pyaslreport.io.readers.file_reader import FileReader
 
 class ASLUtils:
 
@@ -145,6 +145,7 @@ class ASLUtils:
 
     @staticmethod
     def condense_and_reformat_discrepancies(error_list):
+
         if not error_list:
             return [], []
         
@@ -169,6 +170,8 @@ class ASLUtils:
             else:
                 # If the message doesn't contain "Discrepancy", add it as is
                 condensed_errors[error] = error
+
+        return list(condensed_errors.values()), param_names
 
 
     @staticmethod

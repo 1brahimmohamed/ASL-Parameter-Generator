@@ -1,6 +1,6 @@
-from package.modalities.asl.validators.base_asl_validator import BaseASLValidator
-from package.modalities.asl.validators.number_array_validator import NumberArrayValidator
-from package.modalities.asl.validators.number_validator import NumberValidator
+from pyaslreport.modalities.asl.validators.base_asl_validator import BaseASLValidator
+from pyaslreport.modalities.asl.validators.number_array_validator import NumberArrayValidator
+from pyaslreport.modalities.asl.validators.number_validator import NumberValidator
 
 
 class NumberOrNumberArrayValidator(BaseASLValidator):

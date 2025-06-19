@@ -1,4 +1,4 @@
-from package.modalities.base_validator import BaseValidator
+from pyaslreport.modalities.base_validator import BaseValidator
 
 
 class DSCValidator(BaseValidator):

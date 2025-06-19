@@ -1,5 +1,5 @@
 from . import processor, validator
-from package.modalities.registry import register_modality
+from pyaslreport.modalities.registry import register_modality
 
 register_modality(
     name="test-dsc",

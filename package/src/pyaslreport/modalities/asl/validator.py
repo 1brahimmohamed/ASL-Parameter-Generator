@@ -1,6 +1,6 @@
-from package.modalities.asl.validators.json_validator import JSONValidator
-from package.modalities.base_validator import BaseValidator
-from package.core.config import config
+from pyaslreport.modalities.asl.validators.json_validator import JSONValidator
+from pyaslreport.modalities.base_validator import BaseValidator
+from pyaslreport.core.config import config
 
 
 class ASLValidator(BaseValidator):

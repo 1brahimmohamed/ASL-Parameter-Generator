@@ -1,6 +1,5 @@
-from package.modalities import asl, testdsc
-from package.modalities.registry import get_processor
-
+from pyaslreport.modalities import asl, testdsc
+from .modalities.registry import get_processor
 
 def generate_report(data):
     """

@@ -1,5 +1,6 @@
 import logging
-from .config import config
+
+from pyaslreport.core.config import config
 
 def get_logger(name: str):
     log_level = config.get("log_level", "INFO").upper()

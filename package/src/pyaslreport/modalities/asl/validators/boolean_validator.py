@@ -1,4 +1,4 @@
-from package.modalities.asl.validators.base_asl_validator import BaseASLValidator
+from pyaslreport.modalities.asl.validators.base_asl_validator import BaseASLValidator
 
 
 class BooleanValidator(BaseASLValidator):

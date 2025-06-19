@@ -2,7 +2,7 @@ from collections import Counter
 from statistics import mode, median
 import numpy as np
 
-from package.modalities.asl.validators.base_asl_validator import BaseASLValidator
+from pyaslreport.modalities.asl.validators.base_asl_validator import BaseASLValidator
 
 
 class ConsistencyValidator(BaseASLValidator):
