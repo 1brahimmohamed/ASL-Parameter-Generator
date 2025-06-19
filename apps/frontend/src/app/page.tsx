@@ -16,41 +16,6 @@ export default function Home() {
                 </h2>
                 <Upload/>
             </div>
-
-            <div className={"flex gap-4 h-2/5"}>
-
-                <div className={"flex flex-col w-1/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Missing Parameters
-                    </h2>
-                    <MissingParameters/>
-                </div>
-
-                <div className={"flex flex-col w-2/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Basic Report
-                    </h2>
-                    <BasicReport/>
-                </div>
-
-            </div>
-            <div className={"flex gap-4 h-2/5"}>
-
-                <div className={"flex flex-col w-1/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Errors
-                    </h2>
-                    <Errors/>
-                </div>
-
-                <div className={"flex flex-col w-2/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Extended Report
-                    </h2>
-                    <ExtendedReport/>
-                </div>
-
-            </div>
         </div>
     );
 }

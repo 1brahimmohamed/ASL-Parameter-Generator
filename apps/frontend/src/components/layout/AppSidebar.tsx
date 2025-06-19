@@ -1,26 +1,9 @@
 "use client"
 
 import * as React from "react"
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react"
-
 import Image from "next/image"
 import Link from "next/link"
+import NavData from "./navigation-data"
 
 import {
   Sidebar,
@@ -31,6 +14,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import NavMain from "./NavMain"
+import NavSecondary from "./NavSecondary"
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   return (
@@ -64,6 +49,9 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
       </SidebarHeader>
       <SidebarContent>
         {/* CONTENT HERE  */}
+
+        <NavMain items={NavData.navMain} />
+        <NavSecondary items={NavData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
        

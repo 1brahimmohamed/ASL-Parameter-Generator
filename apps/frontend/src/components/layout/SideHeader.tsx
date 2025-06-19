@@ -15,7 +15,7 @@ const SiteHeader = () => {
                     orientation="vertical"
                     className="mx-2 data-[orientation=vertical]:h-4"
                 />
-                <h1 className="text-base font-medium">ASL Methods Parameter Generator</h1>
+                <h1 className="text-base font-medium">OSIPI ASL Reporting Tool</h1>
                 <div className="ml-auto flex items-center gap-2">
                     <ThemeToggle/>
 
