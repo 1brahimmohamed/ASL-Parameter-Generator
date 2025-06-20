@@ -5,13 +5,16 @@ class FileReader:
 
     @staticmethod
     def read(file_path):
+        """
+        Reads a file and returns its content based on the file type.
+        Supported file types are JSON and TSV. If the file is empty, it returns None.
+        Args:
+            file_path (str): Path to the file to be read.
+        Returns:
+            Parsed content of the file.
+        """
         try:
-            # Determine if the input is a FileStorage object or a file path
-            if isinstance(file_path, str):
-                file_stream = open(file_path, 'r')
-            else:
-                raise RuntimeError("Unsupported file type: {type(file_path)}")
-
+            file_stream = open(file_path, 'r')
             if file_path.endswith('.json'):
                 return FileReader._read_json(file_stream)
 
@@ -22,6 +25,8 @@ class FileReader:
                 raise RuntimeError("Unsupported file format")
         except json.JSONDecodeError as e:
             raise RuntimeError(f"Error decoding JSON from file: {e.msg}")
+        except FileNotFoundError:
+            raise RuntimeError(f"File not found: {file_path}")
         except Exception as e:
             raise RuntimeError(f"Error reading file: {str(e)}")
 
@@ -30,13 +35,15 @@ class FileReader:
         """
         Reads a JSON file and returns its content.
 
-        :param file_stream: Path to the JSON file.
-        :return: Parsed JSON data.
+        Args:
+         file_stream (file object): File stream of the JSON file to be read.
+        Returns:
+             Parsed JSON data.
         """
         with file_stream as f:
             content = f.read().strip()  # Read the content and strip any leading/trailing whitespace
             if content:  # Check if the file is not empty
-                data = json.loads(content)  # Parse JSON content
+                data = json.loads(content)
                 return data
             else:
                 return None
@@ -45,8 +52,9 @@ class FileReader:
     def _read_tsv(file_stream):
         """
         Reads a TSV file and returns its content as a list of strings.
-        :param file_stream: Path to the TSV file.
-        :return: List of strings representing the TSV content, or None if the file is empty.
+        Args: file_stream (file object): File stream of the TSV file to be read.
+        Returns:
+         List of strings representing the TSV content, or None if the file is empty.
         """
         with file_stream as f:
             lines = f.readlines()

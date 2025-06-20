@@ -2,17 +2,20 @@ import nibabel as nib
 
 
 class NiftiReader:
-    """
-    A class to read NIfTI files.
-    This is a placeholder for the actual implementation.
-    """
 
     @staticmethod
     def read(nifti_file):
+        """
+        Reads a NIfTI file and returns the NIfTI image object.
+        Args:
+            nifti_file (str): Path to the NIfTI file to be read.
+        Returns:
+            nib.Nifti1Image: NIfTI image object if the file is valid.
+        """
         try:
             if isinstance(nifti_file, str):
                 if not nifti_file.endswith(('.nii', '.nii.gz')):
-                    return None, f"Invalid file: {nifti_file}"
+                    raise ValueError("File must be a NIfTI file with .nii or .nii.gz extension.")
 
                 nifti_filepath = nifti_file
 
@@ -20,8 +23,7 @@ class NiftiReader:
                 raise ValueError("Unsupported file type. Expected a string path to a NIfTI file.")
 
             nifti_img = nib.load(nifti_filepath)
-            slice_count = nifti_img.shape[2]
-            return slice_count
+            return nifti_img
 
         except Exception as e:
             raise RuntimeError(f"Error reading NIfTI file: {str(e)}") from e

@@ -59,7 +59,8 @@ class ASLProcessor(BaseProcessor):
 
         grouped_files = ASLUtils.group_files(self.data["files"], self.data['filenames'], file_format, "/tmp/upload")
 
-        nifti_slice_number = NiftiReader.read(nifti_file)
+        nifti_img = NiftiReader.read(nifti_file)
+        nifti_slice_number = nifti_img.shape[2]
 
         asl_json_filenames, asl_json_data, m0_prep_times_collection = [], [], []
         errors, warnings, all_absent, bs_all_off = [], [], True, True
