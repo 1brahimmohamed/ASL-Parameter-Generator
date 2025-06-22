@@ -6,34 +6,6 @@ from pyaslreport.io.readers.file_reader import FileReader
 class ASLUtils:
 
     @staticmethod
-    def group_files(files, filenames, file_format, upload_dir):
-        grouped_files = []
-        current_group = {'asl_json': None, 'm0_json': None, 'tsv': None}
-
-        for _, filename in zip(files, filenames):
-            if not filename.endswith(('.json', '.tsv')):
-                raise ValueError(f"Unsupported file format: {filename}")
-
-            filepath = os.path.join(upload_dir, filename)
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
-            data = FileReader.read(filepath)
-
-            if filename.endswith('m0scan.json') or (('m0' in filename) and file_format == "dicom"):
-                current_group['m0_json'] = (filename, data)
-            elif (filename.endswith('asl.json') and file_format == "nifti") or (
-                    filename.endswith('.json') and file_format == "dicom"):
-                if current_group['asl_json']:
-                    grouped_files.append(current_group)
-                current_group = {'asl_json': (filename, data), 'm0_json': None, 'tsv': None}
-            elif filename.endswith('.tsv'):
-                current_group['tsv'] = (filename, data)
-
-        if current_group['asl_json']:
-            grouped_files.append(current_group)
-
-        return grouped_files
-
-    @staticmethod
     def determine_pld_type(session):
         # Check if any of the specified keys contain arrays with different unique values
         for key in ['PostLabelingDelay', 'EchoTime', 'LabelingDuration']:
@@ -172,7 +144,6 @@ class ASLUtils:
                 condensed_errors[error] = error
 
         return list(condensed_errors.values()), param_names
-
 
     @staticmethod
     def determine_m0_tr_and_report(m0_prep_times_collection, all_absent, bs_all_off, discrepancies,
