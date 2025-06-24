@@ -37,7 +37,6 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {useAppContext} from "@/providers/AppProvider";
-import {IReportApiResponse} from "@/types";
 import {mapAslParametersToTable} from "@/utils";
 
 const data: Parameter[] = [
@@ -120,7 +119,7 @@ export type Parameter = {
     value: string
 }
 
-export const columns: ColumnDef<unknown, any>[] = [
+export const columns: ColumnDef<Parameter>[] = [
     {
         id: "select",
         header: ({table}) => (
@@ -168,7 +167,7 @@ export const columns: ColumnDef<unknown, any>[] = [
         id: "actions",
         enableHiding: false,
         cell: ({row}) => {
-            const payment = row.original
+            const parameter = row.original as Parameter
 
             return (
                 <DropdownMenu>
@@ -181,13 +180,12 @@ export const columns: ColumnDef<unknown, any>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
+                            onClick={() => navigator.clipboard.writeText(parameter.id)}
                         >
-                            Copy payment ID
+                            Copy parameter ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
+                        <DropdownMenuItem>View parameter details</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
@@ -209,6 +207,7 @@ export default function ParametersTable() {
 
     useEffect(() => {
         if (apiData && apiData.asl_parameters) {
+            console.log("API Data:", apiData.asl_parameters);
             const mappedData = mapAslParametersToTable(apiData.asl_parameters);
             console.log("Mapped Data:", mappedData);
             setTableData(mappedData);

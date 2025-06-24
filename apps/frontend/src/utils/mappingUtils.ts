@@ -4,10 +4,11 @@
  * @returns An array of objects representing the ASL parameters in table format.
  */
 function mapAslParametersToTable(aslParameters: [string, string | number][]) {
+    console.log("ASL Parameters:", aslParameters);
     return aslParameters.map(([parameter, value], index) => ({
         id: (index + 1).toString(),
         parameter,
-        value: value.toString(),
+        value: value === null ? "missing" : value.toString(),
     }));
 }
 
