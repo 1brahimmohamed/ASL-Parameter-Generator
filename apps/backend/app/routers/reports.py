@@ -2,6 +2,8 @@ import os
 from fastapi import APIRouter, HTTPException, status, File, Form, UploadFile
 from typing import List, Optional
 from .data import data
+from pyaslreport import generate_report
+from pyaslreport.enums import ModalityTypeValues
 
 report_router = APIRouter(prefix="/report")
 
@@ -18,27 +20,34 @@ async def get_report(
     """
     Receives form data and two files: a NIfTI file and a DICOM file.
     """
+    data = {
+        "modality": ModalityTypeValues.ASL,
+        "files": [],
+        "nifti_file": None,
+        "dcm_files": []
+    }
 
     # save the incoming files to the uploads directory
     if files:
         for file in files:
-            await save_upload(file)
+            file_path = await save_upload(file)
+            data["files"].append(file_path)
 
     if nifti_file:
-        await save_upload(nifti_file)
+        file_path = await save_upload(nifti_file)
+        data["nifti_file"] = file_path
 
     if dcm_files:
         for file in dcm_files:
-            await save_upload(file, base_dir="uploads/dicom")
+            file_path = await save_upload(file, base_dir="uploads/dicom")
+            data["dcm_files"].append(file_path)
 
-    print({
-        "modality": "asl",
-        "files": [file.filename for file in files ] if files else [],
-        "nifti_file": nifti_file.filename if nifti_file else None,
-        "dcm_files": [ file.filename for file in dcm_files ] if dcm_files else []
-    })
-
-    return data
+    try: 
+        report = generate_report(data)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
+    return report
 
 
 async def save_upload(upload: UploadFile, base_dir="uploads"):
@@ -48,3 +57,4 @@ async def save_upload(upload: UploadFile, base_dir="uploads"):
     os.makedirs(dir_path, exist_ok=True)
     with open(file_path, "wb") as f:
         f.write(await upload.read())
+    return file_path
