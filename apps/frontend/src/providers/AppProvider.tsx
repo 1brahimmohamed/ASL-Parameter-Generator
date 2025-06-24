@@ -18,8 +18,8 @@ export const AppProvider = ({children}: { children: ReactNode }) => {
     const [apiData, setApiDataState] = useState<IReportApiResponse>({} as IReportApiResponse);
 
     // Function to set new API data
-    const setApiData = (data: Partial<IReportApiResponse>) => {
-        setApiDataState({...apiData, ...data});
+    const setApiData = (data: IReportApiResponse) => {
+        setApiDataState(data);
     };
 
     // Function to clear API data

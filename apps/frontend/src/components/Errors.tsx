@@ -12,9 +12,9 @@ const Errors = () => {
 
     useEffect(() => {
         if (apiData.m0_concise_error) {
-            setErrors((prevErrors) => (
-                [...prevErrors, apiData.m0_concise_error]
-            ))
+            setErrors([apiData.m0_concise_error])
+        } else {
+            setErrors([]); // Clear errors when there's no error
         }
     }, [apiData]);
 
