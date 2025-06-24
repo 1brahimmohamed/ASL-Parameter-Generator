@@ -7,7 +7,7 @@ type AppContextType = {
     isLoading: boolean;
     setIsLoading: (isLoading: boolean) => void;
     apiData: IReportApiResponse;
-    setApiData: (data: Partial<IReportApiResponse>) => void;
+    setApiData: (data: IReportApiResponse) => void;
     clearApiData: () => void;
 };
 
