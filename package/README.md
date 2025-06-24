@@ -136,9 +136,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Ibrahim Abdelazim** - [ibrahim.abdelazim@fau.de](mailto:ibrahim.abdelazim@fau.de)
 - **Hanliang Xu** - [hxu110@jh.edu](mailto:hxu110@jh.edu)
-
-## Acknowledgments
-
-- Built for medical imaging research and clinical applications
-- Designed to support ASL and related perfusion imaging techniques
-- Extensible architecture for future modality support
