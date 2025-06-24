@@ -359,6 +359,7 @@ class ASLProcessor(BaseProcessor):
         volume_types = [line.strip() for line in tsv_data if line.strip()]
         pattern, total_acquired_pairs = ASLUtils.analyze_volume_types(volume_types)
         asl_data['TotalAcquiredPairs'] = total_acquired_pairs
+        context.total_acquired_pairs = total_acquired_pairs
 
         # Update global pattern
         if context.global_pattern is None:
