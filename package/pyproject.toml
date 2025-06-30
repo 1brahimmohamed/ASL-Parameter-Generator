@@ -1,6 +1,6 @@
 [project]
 name = "pyaslreport"
-version = "0.0.1"
+version = "0.0.2"
 description = "A Python package for generating methods sections in for ASL parameters."
 authors = [{ name="Ibrahim Abdelazim", email="ibrahim.abdelazim@fau.de" }]
 license = "MIT"
@@ -19,6 +19,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"pyaslreport" = ["*.yaml", "**/*.yaml"]
