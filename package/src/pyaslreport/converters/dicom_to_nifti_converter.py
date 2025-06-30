@@ -4,6 +4,7 @@ import re
 import subprocess
 import tempfile
 import pydicom
+import dicom2nifti
 
 class DICOM2NiFTIConverter:
     """
@@ -12,6 +13,7 @@ class DICOM2NiFTIConverter:
 
     @staticmethod
     def convert(dcm_files, nifti_file=None, converted_files_location="/tmp/upload"):
+
         """
         Convert DICOM files to NIfTI format.
         """
@@ -91,3 +93,21 @@ class DICOM2NiFTIConverter:
             return None, None, None, "nifti", "No NIfTI file was generated."
 
         return converted_files, converted_filenames, nifti_file_assigned, "dicom", None
+
+
+    @staticmethod
+    def dir_to_nifti(dicom_dir: str, output_dir: str, bids_basename: str, overwrite: bool = False) -> str:
+        """
+        Convert a DICOM series to a NIfTI file.
+        Returns the path to the NIfTI file.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        nifti_path = os.path.join(output_dir, f"{bids_basename}.nii.gz")
+        if not os.path.exists(nifti_path) or overwrite:
+            dicom2nifti.convert_directory(dicom_dir, output_dir, compression=True, reorient=True)
+            # Find the generated NIfTI file 
+            for f in os.listdir(output_dir):
+                if f.endswith('.nii.gz'):
+                    os.rename(os.path.join(output_dir, f), nifti_path)
+                    break
+        return nifti_path

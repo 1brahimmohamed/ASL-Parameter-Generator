@@ -1,16 +1,17 @@
-import json
 
-class JSONWriter:
 
+class TsvWriter:
     @staticmethod
     def write(data, filepath):
         """
-        Write data to a JSON file.
+        Write data to a TSV file.
         Args:
-            data (dict): The data to write to the JSON file.
+            data (list): The data to write to the TSV file.
             filepath (str): The path to the file where the data should be written.
         Raises:
             IOError: If there is an error writing to the file.
         """
         with open(filepath, 'w') as file:
-            json.dump(data, file, indent=2)
+            for row in data:
+                file.write('\t'.join(row) + '\n')
+            

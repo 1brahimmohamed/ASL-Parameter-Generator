@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./apps/frontend
+    container_name: frontend-aslreport
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/frontend
+          target: /app
+          ignore:
+            - node_modules/
+
+  backend:
+    build:
+      context: ./apps/backend
+    container_name: backend-aslreport
+    working_dir: /app
+    volumes:
+      - ./apps/backend:/app
+      - ./Package:/app/Package         # Mount shared package (if used)
+    ports:
+      - "8000:8000"
+    develop:
+      watch:
+      - action: sync
+        path: ./apps/backend
+        target: /app

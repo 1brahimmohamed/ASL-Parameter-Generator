@@ -13,7 +13,7 @@ const client = axios.create({
  * @param formData - The FormData object containing the files to be processed.
  * @return IReportApiResponse - A promise that resolves to the report data.
  */
-const getReport = async (formData: FormData): Promise<any> => {
+const getReport = async (formData: FormData): Promise<IReportApiResponse> => {
     try {
         const response = await client.post(
             '/process',

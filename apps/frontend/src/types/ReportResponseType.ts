@@ -8,7 +8,7 @@ interface IReportApiResponse {
     };
     errors_concise: Record<string, unknown>;
     errors_concise_text: string;
-    extended_parameters: any[];
+    extended_parameters: Parameter[];
     extended_report: string;
     inconsistencies: string;
     m0_concise_error: string;

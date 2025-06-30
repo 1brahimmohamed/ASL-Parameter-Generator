@@ -9,7 +9,8 @@ class GeneralUtils:
         """
         Clean up a folder by deleting all files and subdirectories within it.
         This method will raise an error if it fails to delete any file or directory.
-        :param folder_path:
+        Args:
+            folder_path (str): The path to the folder to be cleaned up.
         """
 
         for filename in os.listdir(folder_path):

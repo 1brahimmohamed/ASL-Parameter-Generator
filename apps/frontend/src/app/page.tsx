@@ -1,9 +1,4 @@
-import GeneratedMethods from "@/components/GeneratedMethods";
-import MissingParameters from "@/components/MissingParameters";
 import Upload from "@/components/Upload";
-import BasicReport from "@/components/BasicReport";
-import ExtendedReport from "@/components/ExtendedReport";
-import Errors from "@/components/Errors";
 
 export default function Home() {
 

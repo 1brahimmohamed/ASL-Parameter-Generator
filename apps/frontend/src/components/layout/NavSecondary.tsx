@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { type Icon } from "@tabler/icons-react"
 
 import {
     SidebarGroup,
