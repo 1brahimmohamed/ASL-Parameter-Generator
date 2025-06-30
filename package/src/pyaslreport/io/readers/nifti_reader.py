@@ -1,6 +1,5 @@
 import nibabel as nib
 
-
 class NiftiReader:
 
     @staticmethod
