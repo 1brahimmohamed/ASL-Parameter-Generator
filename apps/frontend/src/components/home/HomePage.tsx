@@ -1,4 +1,4 @@
-import {Card, CardContent, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 
 import UploadButtons from "@/components/home/UploadButtons";
 import WhatIsThisTool from "@/components/home/WhatIsThisTool";

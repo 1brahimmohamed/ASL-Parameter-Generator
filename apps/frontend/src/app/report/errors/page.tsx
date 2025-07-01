@@ -3,7 +3,6 @@
 import ErrorsCard from "@/components/errors/ErrorsCard";
 import {useEffect, useState} from "react";
 import {useAppContext} from "@/providers/AppProvider";
-import CardWithTitle from "@/components/general/CardWithTitle";
 
 const Page = () => {
 

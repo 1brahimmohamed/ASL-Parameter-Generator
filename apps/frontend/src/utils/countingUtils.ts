@@ -1,4 +1,6 @@
-const countErrorsAndWarnings = (apiData: any) => {
+import {IReportApiResponse} from "@/types";
+
+const countErrorsAndWarnings = (apiData: IReportApiResponse) => {
     if (!apiData || Object.keys(apiData).length === 0) {
         return { errorCount: 0, warningCount: 0 };
     }

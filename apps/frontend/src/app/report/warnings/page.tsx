@@ -2,7 +2,6 @@
 
 import {useEffect, useState} from "react";
 import {useAppContext} from "@/providers/AppProvider";
-import CardWithTitle from "@/components/general/CardWithTitle";
 import WarningsCard from "@/components/warnings/WarningsCard";
 
 

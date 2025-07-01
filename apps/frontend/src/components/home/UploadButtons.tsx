@@ -58,7 +58,7 @@ const UploadButtons = () => {
                 }
             } catch (error) {
                 setIsLoading(false);
-                toast.error("An unexpected error occurred during upload.");
+                toast.error(`An unexpected error occurred during upload, please try again. Error: ${error}`);
             }
         }
     };

@@ -8,8 +8,12 @@ import {
     IconAlertTriangle,
     IconTransform
 } from "@tabler/icons-react"
+import { TItems } from "@/types";
 
-const NavData = {
+const NavData: {
+    navMain: TItems[];
+    navSecondary: TItems[];
+} = {
     navMain: [
         {
             title: "Upload",
