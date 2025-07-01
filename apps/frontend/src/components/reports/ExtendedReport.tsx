@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 import {useAppContext} from "@/providers/AppProvider";
-import GeneratedMethods from "@/components/GeneratedMethods";
+import GeneratedMethods from "@/components/reports/GeneratedMethods";
 
 const ExtendedReport = () => {
     const [text, setText] = useState("");
@@ -17,7 +17,7 @@ const ExtendedReport = () => {
 
 
     return (
-        <GeneratedMethods text={text} />
+        <GeneratedMethods text={text} type="extended" />
     )
 
 }

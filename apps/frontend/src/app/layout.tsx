@@ -11,8 +11,8 @@ import {
 
 import AppSidebar from "@/components/layout/AppSidebar";
 import SiteHeader from "@/components/layout/SideHeader";
-import Spinner from "@/components/Spinner";
-import { Toaster } from "react-hot-toast";
+import Spinner from "@/components/general/Spinner";
+import { Toaster } from "sonner"
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -58,7 +58,7 @@ export default function RootLayout({
                     <SidebarInset>
                         <SiteHeader/>
                         <Spinner/>
-                        <Toaster  position="bottom-right" toastOptions={{duration: 5000}} />
+                        <Toaster  position="bottom-right" richColors />
                         {children}
                     </SidebarInset>
 

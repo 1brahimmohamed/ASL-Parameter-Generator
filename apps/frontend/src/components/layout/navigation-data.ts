@@ -5,30 +5,47 @@ import {
     IconUpload,
     IconReport,
     IconExclamationCircle,
-    IconAlertTriangle
+    IconAlertTriangle,
+    IconTransform
 } from "@tabler/icons-react"
+import { TItems } from "@/types";
 
-const NavData = {
+const NavData: {
+    navMain: TItems[];
+    navSecondary: TItems[];
+} = {
     navMain: [
         {
             title: "Upload",
             url: "/",
             icon: IconUpload,
+            showCount: false,
         },
         {
             title: "Report",
             url: "/report",
             icon: IconReport,
+            showCount: false,
         },
         {
             title: "Errors",
             url: "/report/errors",
             icon: IconExclamationCircle,
+            showCount: true,
+            countType: "errors",
         },
         {
             title: "Warnings",
             url: "/report/warnings",
             icon: IconAlertTriangle,
+            showCount: true,
+            countType: "warnings",
+        },
+        {
+            title: "Convert DICOM to BDIS",
+            url: "/convert/dcm-to-bdis",
+            icon: IconTransform,
+            showCount: false,
         }
     ],
     navSecondary: [

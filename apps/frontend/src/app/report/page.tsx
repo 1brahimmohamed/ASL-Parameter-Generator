@@ -1,53 +1,35 @@
-import MissingParameters from "@/components/MissingParameters";
-import Upload from "@/components/Upload";
-import BasicReport from "@/components/BasicReport";
-import ExtendedReport from "@/components/ExtendedReport";
-import Errors from "@/components/Errors";
+import MissingParameters from "@/components/reports/MissingParameters";
+import BasicReport from "@/components/reports/BasicReport";
+import ExtendedReport from "@/components/reports/ExtendedReport";
+import CardWithTitle from "@/components/general/CardWithTitle";
+import ParametersTable from "@/components/reports/ParametersTable";
 
 export default function Home() {
 
     return (
-        <div className="flex flex-col gap-4 h-full w-full p-5 ">
+        <div className="flex gap-4 h-full w-full p-5 ">
 
-            <div className={"flex flex-col h-3/5 gap-4"}>
-                <h2 className={"text-2xl"}>
-                    Upload
-                </h2>
-                <Upload/>
-            </div>
+            <div className={"w-2/5"}>
+                <CardWithTitle title={"Parameters"} className={"h-2/3"}>
+                    <ParametersTable/>
+                </CardWithTitle>
 
-            <div className={"flex gap-4 h-2/5"}>
-
-                <div className={"flex flex-col w-1/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Missing Parameters
-                    </h2>
+                <CardWithTitle title={"Missing Parameters"} className={"h-1/3"}>
                     <MissingParameters/>
-                </div>
-
-                <div className={"flex flex-col w-2/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Basic Report
-                    </h2>
-                    <BasicReport/>
-                </div>
+                </CardWithTitle>
 
             </div>
-            <div className={"flex gap-4 h-2/5"}>
 
-                <div className={"flex flex-col w-1/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Errors
-                    </h2>
-                    <Errors/>
-                </div>
+            <div className={"flex flex-col gap-4 ml-4 h-full w-3/5"}>
 
-                <div className={"flex flex-col w-2/3 gap-4"}>
-                    <h2 className={"text-2xl"}>
-                        Extended Report
-                    </h2>
+                <CardWithTitle title={"Basic Report"} className={"h-2/5"}>
+                    <BasicReport/>
+                </CardWithTitle>
+
+
+                <CardWithTitle title={"Extended Report"} className={"h-3/5"}>
                     <ExtendedReport/>
-                </div>
+                </CardWithTitle>
 
             </div>
         </div>
