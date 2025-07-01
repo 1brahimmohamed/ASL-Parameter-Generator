@@ -1,4 +1,5 @@
 import ASLRelevantFileNames from "./ASLRelevantFileNames";
-import UploadTypes from "./UploadTypes";
+import UploadDataType from "./UploadDataType";
+import UploadModalityType from "@/enums/UploadModalityType";
 
-export { ASLRelevantFileNames, UploadTypes };
+export { ASLRelevantFileNames, UploadDataType, UploadModalityType  };
