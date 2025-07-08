@@ -13,7 +13,7 @@ class GEBasicSinglePLD(GEBaseSequence):
         bids.update(self._extract_ge_common_metadata())
         d = self.dicom_header
         if "GELabelingDuration" in d:
-            bids["LabelingDuration"] = d["GELabelingDuration"]
+            bids["LabelingDuration"] = d.get("GELabelingDuration", None)
         if "InversionTime" in d:
-            bids["PostLabelingDelay"] = d["InversionTime"]
+            bids["PostLabelingDelay"] = d.get("InversionTime", None)
         return bids 

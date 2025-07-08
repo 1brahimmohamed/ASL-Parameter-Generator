@@ -1,5 +1,8 @@
 from pyaslreport.modalities import asl, testdsc
 from .modalities.registry import get_processor
+from pyaslreport.sequences.factory import get_sequence
+import pydicom
+import os
 
 def generate_report(data):
     """
@@ -13,3 +16,39 @@ def generate_report(data):
     processor = processor_class(data)
 
     return processor.process()
+
+
+def get_bids_metadata(data):
+    """
+    Converts the provided data to BIDS format.
+    :param data: Dictionary containing modality data.
+    :return: BIDS-formatted data.
+    """
+    modality = data.get("modality")
+    dicom_dir = data.get("dicom_dir")
+    dicom_header = get_dicom_header(dicom_dir)
+    sequence = get_sequence(modality, dicom_header)
+    
+    if sequence is None:
+        raise ValueError(f"No matching sequence found for modality '{modality}' with the provided DICOM header")
+    
+    return sequence.extract_bids_metadata()
+
+
+def get_dicom_header(dicom_dir: str):
+    """
+    Extracts the DICOM header from the provided DICOM files.
+    :param dicom_files: List of DICOM files.
+    """
+
+    # read the first file in the directory
+    dcm_files = [f for f in os.listdir(dicom_dir) if f.endswith('.dcm')]
+
+    print(f"Found {len(dcm_files)} DICOM files in {dicom_dir}")
+
+    if not dcm_files:
+        raise ValueError(f"No DICOM files found in directory: {dicom_dir}")
+    
+    dcm_header = pydicom.dcmread(os.path.join(dicom_dir, dcm_files[0]))
+    
+    return dcm_header

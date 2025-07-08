@@ -23,7 +23,7 @@ class GEMultiPLD(GEBaseSequence):
             ("GEPrivateCV9", "GEPrivateCV9"),
         ]:
             if dicom_key in d:
-                bids[bids_key] = d[dicom_key]
+                bids[bids_key] = d.get(dicom_key, None)
 
         # ArterialSpinLabelingType is always 'PCASL'
         bids["ArterialSpinLabelingType"] = "PCASL"

@@ -3,14 +3,15 @@ import os
 from pyaslreport.io.writers import JSONWriter, TsvWriter
 from pyaslreport.io.readers import NiftiReader
 from pyaslreport.converters import DICOM2NiFTIConverter
+import pydicom
 
 class ASLSequenceBase(ABC):
-    def __init__(self, dicom_header: dict):
+    def __init__(self, dicom_header: pydicom.Dataset):
         self.dicom_header = dicom_header
 
     @classmethod
     @abstractmethod
-    def matches(cls, dicom_header: dict) -> bool:
+    def matches(cls, dicom_header: pydicom.Dataset) -> bool:
         """Return True if this class can handle the given DICOM header."""
         pass
 
@@ -42,11 +43,11 @@ class ASLSequenceBase(ABC):
             ("FlipAngle", "FlipAngle"),
         ]:
             if dicom_key in d:
-                bids[bids_key] = d[dicom_key]
+                bids[bids_key] = d.get(dicom_key, None)
 
         # ms->s conversion for EchoTime (can be array)
         if "EchoTime" in d:
-            et = d["EchoTime"]
+            et = d.get("EchoTime", None)
             if isinstance(et, (list, tuple)):
                 bids["EchoTime"] = [v / 1000.0 for v in et]
             else:
@@ -54,7 +55,7 @@ class ASLSequenceBase(ABC):
 
         # ms->s conversion for RepetitionTimePreparation
         if "RepetitionTime" in d:
-            bids["RepetitionTimePreparation"] = d["RepetitionTime"] / 1000.0
+            bids["RepetitionTimePreparation"] = d.get("RepetitionTime", None) / 1000.0
 
         return bids 
 
