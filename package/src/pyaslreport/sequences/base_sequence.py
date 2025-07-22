@@ -1,13 +1,12 @@
-from abc import ABC, abstractmethod
 import os
-from pyaslreport.io.writers import JSONWriter, TsvWriter
-from pyaslreport.io.readers import NiftiReader
-from pyaslreport.converters import DICOM2NiFTIConverter
 import pydicom
+from abc import ABC, abstractmethod
+from pyaslreport.io.writers import JSONWriter, TsvWriter
+from pyaslreport.converters import DICOM2NiFTIConverter
 from pyaslreport.utils import dicom_tags_utils as dcm_tags
 from pyaslreport.utils import UnitConverterUtils
 
-class ASLSequenceBase(ABC):
+class BaseSequence(ABC):
     def __init__(self, dicom_header: pydicom.Dataset):
         self.dicom_header = dicom_header
 
@@ -30,13 +29,6 @@ class ASLSequenceBase(ABC):
     def extract_bids_metadata(self) -> dict:
         """Extract and convert DICOM metadata to BIDS fields."""
         pass
-
-    # @abstractmethod
-    # def generate_asl_context(self, nifti_path: str):
-    #     """
-    #     Generate the ASL context for the sequence.
-    #     """
-    #     pass
 
     def _extract_common_metadata(self) -> dict:
         """Extract and convert common DICOM metadata fields to BIDS fields, including ms->s conversion where needed."""
@@ -68,8 +60,6 @@ class ASLSequenceBase(ABC):
 
         return bids 
 
-
-   
     def convert_to_bids(self, dicom_dir: str, output_dir: str, bids_basename: str = "sub-01_asl", overwrite: bool = False):
         """
         Orchestrate the conversion from DICOM series to BIDS (NIfTI, JSON, TSV).

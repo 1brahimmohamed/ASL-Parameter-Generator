@@ -1,8 +1,8 @@
-from .ge_base import GEBaseSequence
 import math
+from pyaslreport.sequences.ge.asl.ge_asl_base import GEASLBase
 from pyaslreport.utils import dicom_tags_utils as dcm_tags
 
-class GEMultiPLD(GEBaseSequence):
+class GEMultiPLD(GEASLBase):
     @classmethod
     def matches(cls, dicom_header):
         return (
@@ -16,20 +16,23 @@ class GEMultiPLD(GEBaseSequence):
         return 10
 
     def extract_bids_metadata(self):
+        
         bids = self._extract_common_metadata()
         bids.update(self._extract_ge_common_metadata())
+        bids.update(self._extract_ge_common_asl_metadata())
+
         d = self.dicom_header
         # eASL-specific tags
-        for dicom_key, bids_key in [
-            (dcm_tags.GE_PRIVATE_CV4, "GEPrivateCV4"),
-            (dcm_tags.GE_PRIVATE_CV5, "GEPrivateCV5"),
-            (dcm_tags.GE_PRIVATE_CV6, "GEPrivateCV6"),
-            (dcm_tags.GE_PRIVATE_CV7, "GEPrivateCV7"),
-            (dcm_tags.GE_PRIVATE_CV8, "GEPrivateCV8"),
-            (dcm_tags.GE_PRIVATE_CV9, "GEPrivateCV9"),
-        ]:
-            if dicom_key in d:
-                bids[bids_key] = d.get(dicom_key, None).value
+        # for dicom_key, bids_key in [
+        #     (dcm_tags.GE_PRIVATE_CV4, "GEPrivateCV4"),
+        #     (dcm_tags.GE_PRIVATE_CV5, "GEPrivateCV5"),
+        #     (dcm_tags.GE_PRIVATE_CV6, "GEPrivateCV6"),
+        #     (dcm_tags.GE_PRIVATE_CV7, "GEPrivateCV7"),
+        #     (dcm_tags.GE_PRIVATE_CV8, "GEPrivateCV8"),
+        #     (dcm_tags.GE_PRIVATE_CV9, "GEPrivateCV9"),
+        # ]:
+        #     if dicom_key in d:
+        #         bids[bids_key] = d.get(dicom_key, None).value
 
         # ArterialSpinLabelingType is always 'PCASL'
         bids["ArterialSpinLabelingType"] = "PCASL"
