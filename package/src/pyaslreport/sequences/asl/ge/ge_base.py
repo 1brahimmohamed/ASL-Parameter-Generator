@@ -1,52 +1,67 @@
 from pyaslreport.sequences.asl.base_sequence import ASLSequenceBase
+from pyaslreport.utils import dicom_tags_utils as dcm_tags
 
 class GEBaseSequence(ASLSequenceBase):
+    @classmethod
+    def is_ge_manufacturer(cls, dicom_header):
+        """
+        Check if the manufacturer contains GE or General Electric.
+        
+        Args:
+            dicom_header: DICOM header dictionary
+            
+        Returns:
+            bool: True if manufacturer contains GE or General Electric
+        """
+        manufacturer = dicom_header.get(dcm_tags.MANUFACTURER, "").value.strip().upper()
+        return "GE" in manufacturer or "GENERAL ELECTRIC" in manufacturer
+
     def _extract_ge_common_metadata(self) -> dict:
         d = self.dicom_header
         bids = {}
         # Direct GE-specific mappings
-        if "AssetRFactor" in d:
-            bids["AssetRFactor"] = d.get("AssetRFactor", None)
-        if "EffectiveEchoSpacing" in d:
-            bids["EffectiveEchoSpacing"] = d.get("EffectiveEchoSpacing", None)
-        if "AcquisitionMatrix" in d:
-            bids["AcquisitionMatrix"] = d.get("AcquisitionMatrix", None)
-        if "NumberOfExcitations" in d:
-            bids["TotalAcquiredPairs"] = d.get("NumberOfExcitations", None)
+        if dcm_tags.GE_ASSET_R_FACTOR in d:
+            bids["AssetRFactor"] = d.get(dcm_tags.GE_ASSET_R_FACTOR, None).value
+        if dcm_tags.GE_EFFECTIVE_ECHO_SPACING in d:
+            bids["EffectiveEchoSpacing"] = d.get(dcm_tags.GE_EFFECTIVE_ECHO_SPACING, None).value
+        if dcm_tags.GE_ACQUISITION_MATRIX in d:
+            bids["AcquisitionMatrix"] = d.get(dcm_tags.GE_ACQUISITION_MATRIX, None).value
+        if dcm_tags.GE_NUMBER_OF_EXCITATIONS in d:
+            bids["TotalAcquiredPairs"] = d.get(dcm_tags.GE_NUMBER_OF_EXCITATIONS, None).value
             
         # Derived fields
         # EffectiveEchoSpacing = EffectiveEchoSpacing * AssetRFactor * 1e-6
-        if "EffectiveEchoSpacing" in d and "AssetRFactor" in d:
+        if dcm_tags.GE_EFFECTIVE_ECHO_SPACING in d and dcm_tags.GE_ASSET_R_FACTOR in d:
             try:
-                eff_echo = float(d.get("EffectiveEchoSpacing", None))
-                asset = float(d.get("AssetRFactor", None))
+                eff_echo = float(d.get(dcm_tags.GE_EFFECTIVE_ECHO_SPACING, None).value)
+                asset = float(d.get(dcm_tags.GE_ASSET_R_FACTOR, None).value)
                 bids["EffectiveEchoSpacing"] = eff_echo * asset * 1e-6
             except Exception:
                 pass
 
         # TotalReadoutTime = (AcquisitionMatrix[0] - 1) * EffectiveEchoSpacing
         if (
-            "AcquisitionMatrix" in d and
-            isinstance(d.get("AcquisitionMatrix", None), (list, tuple)) and
-            len(d.get("AcquisitionMatrix", None)) > 0 and
-            "EffectiveEchoSpacing" in bids
+            dcm_tags.GE_ACQUISITION_MATRIX in d and
+            isinstance(d.get(dcm_tags.GE_ACQUISITION_MATRIX, None).value, (list, tuple)) and
+            len(d.get(dcm_tags.GE_ACQUISITION_MATRIX, None).value) > 0 and
+            dcm_tags.GE_EFFECTIVE_ECHO_SPACING in bids
         ):
             try:
-                acq_matrix = d.get("AcquisitionMatrix", None)[0]
+                acq_matrix = d.get(dcm_tags.GE_ACQUISITION_MATRIX, None).value[0]
                 eff_echo = bids["EffectiveEchoSpacing"]
                 bids["TotalReadoutTime"] = (acq_matrix - 1) * eff_echo
             except Exception:
                 pass
         
         # MRAcquisitionType default is 3D if not present
-        if "MRAcquisitionType" in d:
-            bids["MRAcquisitionType"] = d.get("MRAcquisitionType", None)
+        if dcm_tags.MR_ACQUISITION_TYPE in d:
+            bids["MRAcquisitionType"] = d.get(dcm_tags.MR_ACQUISITION_TYPE, None).value
         else:
             bids["MRAcquisitionType"] = "3D"
 
         # PulseSequenceType default is spiral if not present
-        if "PulseSequenceType" in d:
-            bids["PulseSequenceType"] = d.get("PulseSequenceType", None)
+        if dcm_tags.MR_ACQUISITION_TYPE in d:
+            bids["PulseSequenceType"] = d.get(dcm_tags.MR_ACQUISITION_TYPE, None).value
         else:
             bids["PulseSequenceType"] = "spiral"
 

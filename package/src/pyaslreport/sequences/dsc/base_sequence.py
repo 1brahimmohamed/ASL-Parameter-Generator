@@ -12,10 +12,12 @@ class DSCSequenceBase(ABC):
         """Return True if this class can handle the given DICOM header."""
         return True
         
-        return False
 
     def extract_bids_metadata(self) -> dict:
         """Extract and convert DICOM metadata to BIDS fields."""
 
         print('processing DSC sequence')
-        return {}
+        
+        return {
+            "dsc": "dsc params"
+        }

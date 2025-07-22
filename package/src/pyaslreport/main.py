@@ -2,7 +2,9 @@ from pyaslreport.modalities import asl, testdsc
 from .modalities.registry import get_processor
 from pyaslreport.sequences.factory import get_sequence
 import pydicom
+from pydicom.errors import InvalidDicomError
 import os
+import logging as log
 
 def generate_report(data):
     """
@@ -38,17 +40,30 @@ def get_bids_metadata(data):
 def get_dicom_header(dicom_dir: str):
     """
     Extracts the DICOM header from the provided DICOM files.
-    :param dicom_files: List of DICOM files.
+    :param dicom_dir: Directory containing DICOM files.
+    :return: DICOM header from the first valid DICOM file found.
     """
+    # Get all files in the directory
+    all_files = [f for f in os.listdir(dicom_dir) if os.path.isfile(os.path.join(dicom_dir, f))]
+    
+    # Try to find DICOM files by attempting to read them with pydicom
+    dcm_files = []
+    for file in all_files:
+        file_path = os.path.join(dicom_dir, file)
+        try:
+            # Try to read the file as DICOM
+            pydicom.dcmread(file_path, stop_before_pixels=True)
+            dcm_files.append(file)
+        except (InvalidDicomError, OSError, PermissionError):
+            # File is not a valid DICOM file or cannot be read
+            continue
 
-    # read the first file in the directory
-    dcm_files = [f for f in os.listdir(dicom_dir) if f.endswith('.dcm')]
-
-    print(f"Found {len(dcm_files)} DICOM files in {dicom_dir}")
+    log.info(f"Found {len(dcm_files)} DICOM files in {dicom_dir}")
 
     if not dcm_files:
         raise ValueError(f"No DICOM files found in directory: {dicom_dir}")
     
+    # Read the first valid DICOM file
     dcm_header = pydicom.dcmread(os.path.join(dicom_dir, dcm_files[0]))
     
     return dcm_header
