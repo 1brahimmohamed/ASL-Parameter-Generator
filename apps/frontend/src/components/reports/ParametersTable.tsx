@@ -37,80 +37,6 @@ import {
 import {useAppContext} from "@/providers/AppProvider";
 import {mapAslParametersToTable} from "@/utils";
 
-const data: Parameter[] = [
-    {
-        id: "1",
-        parameter: "ImagePatientPosition",
-        value: "HFS",
-    },
-    {
-        id: "2",
-        parameter: "ImageType",
-        value: "ORIGINAL\\PRIMARY\\AXIAL\\CT",
-    },
-    {
-        id: "3",
-        parameter: "Modality",
-        value: "CT",
-    },
-    {
-        id: "4",
-        parameter: "PatientID",
-        value: "123456",
-    },
-    {
-        id: "5",
-        parameter: "StudyInstanceUID",
-        value: "1.2.840.113619.2.55.3.604688.100.1.10000000000000000000",
-    },
-    {
-        id: "6",
-        parameter: "SeriesInstanceUID",
-        value: "1.2.840.113619.2.55.3.604688.100.1.10000000000000000001",
-    },
-    {
-        id: "7",
-        parameter: "SOPInstanceUID",
-        value: "1.2.840.113619.2.55.3.604688.100.1.10000000000000000002",
-    },
-    {
-        id: "8",
-        parameter: "StudyDate",
-        value: "20231001",
-    },
-    {
-        id: "9",
-        parameter: "SeriesNumber",
-        value: "1",
-    },
-    {
-        id: "10",
-        parameter: "InstanceNumber",
-        value: "1",
-    },
-    {
-        id: "11",
-        parameter: "SliceThickness",
-        value: "5.0",
-    },
-    {
-        id: "12",
-        parameter: "PixelSpacing",
-        value: "0.5\\0.5",
-    },
-    {
-        id: "13",
-        parameter: "ImageOrientationPatient",
-        value: "1\\0\\0\\0\\1\\0",
-    },
-    {
-        id: "14",
-        parameter: "ImagePositionPatient",
-        value: "0\\0\\0",
-    },
-]
-
-
 export type Parameter = {
     id: string
     parameter: string
@@ -177,24 +103,21 @@ export default function ParametersTable() {
     const [columnVisibility, setColumnVisibility] =
         useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
-    const [tableData, setTableData] = useState<Parameter[]>(data);
+    const [data, setData] = useState<Parameter[]>([]);
 
     const {apiData} = useAppContext();
 
     useEffect(() => {
         if (apiData && apiData.asl_parameters) {
-            console.log("API Data:", apiData.asl_parameters);
-            console.log("M0 Data:", apiData.m0_parameters);
             const combinedData = [...apiData.asl_parameters, ...apiData.m0_parameters];
             const mappedData = mapAslParametersToTable(combinedData);
-            console.log("Mapped Data:", mappedData);
-            setTableData(mappedData);
+            setData(mappedData);
         }
     }, [apiData]);
 
 
     const table = useReactTable({
-        data: tableData,
+        data: data,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -278,7 +201,7 @@ export default function ParametersTable() {
                                         data-state={row.getIsSelected() && "selected"}
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id} className="w-1/2">
+                                            <TableCell key={cell.id} className="w-1/2 px-4">
                                                 <div className="truncate">
                                                     {flexRender(
                                                         cell.column.columnDef.cell,

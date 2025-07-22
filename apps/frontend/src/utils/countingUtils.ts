@@ -33,11 +33,6 @@ const countErrorsAndWarnings = (apiData: IReportApiResponse) => {
         warningCount += Object.keys(apiData.warnings_concise).length;
     }
 
-    // Count M0 warnings (if any)
-    if (apiData.m0_concise_warning && apiData.m0_concise_warning.trim()) {
-        warningCount += 1;
-    }
-
     return { errorCount, warningCount };
 };
 

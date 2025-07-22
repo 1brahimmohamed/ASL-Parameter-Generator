@@ -27,6 +27,44 @@ const getReport = async (formData: FormData): Promise<IReportApiResponse> => {
     }
 }
 
+/**
+ * Submits missing parameters to the backend.
+ * @param missingParams - The missing parameters to be submitted.
+ * @return IReportApiResponse - A promise that resolves to the report data.
+ */
+const postMissingParameters = async (missingParams: { [key: string]: string }) => {
+    try {
+        const response = await client.post('/missing-parameters', {missingParams});
+        return response.data;
+    } catch (error) {
+        console.error('Error submitting missing parameters:', error);
+        throw error;
+    }
+}
+
+const getReportPdf = async (reportData: Partial<IReportApiResponse>) => {
+    try {
+        const response = await client.post(
+            '/report-pdf',
+            { report_data: reportData }, // body data
+            { responseType: 'blob' } // config
+          );
+
+          const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          const fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', 'report.pdf'); // change filename as needed
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          document.body.removeChild(fileLink);
+    } catch (error) {
+        console.error('Error getting report PDF:', error);
+        throw error;
+    }
+}
+
 export {
     getReport,
+    postMissingParameters,
+    getReportPdf,
 }
