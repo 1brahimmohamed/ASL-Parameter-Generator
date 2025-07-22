@@ -5,6 +5,7 @@ from pyaslreport.io.readers import NiftiReader
 from pyaslreport.converters import DICOM2NiFTIConverter
 import pydicom
 from pyaslreport.utils import dicom_tags_utils as dcm_tags
+from pyaslreport.utils import UnitConverterUtils
 
 class ASLSequenceBase(ABC):
     def __init__(self, dicom_header: pydicom.Dataset):
@@ -58,17 +59,12 @@ class ASLSequenceBase(ABC):
         # ms->s conversion for EchoTime (can be array)
         if dcm_tags.ECHO_TIME in d:
             echo_time = d.get(dcm_tags.ECHO_TIME, None).value
-
-            # 
-            if isinstance(echo_time, (list, tuple)):
-                bids["EchoTime"] = [v / 1000.0 for v in echo_time]
-            else:
-                bids["EchoTime"] = echo_time / 1000.0
+            bids["EchoTime"] = UnitConverterUtils.convert_milliseconds_to_seconds(echo_time)
 
         # ms->s conversion for RepetitionTimePreparation
         if dcm_tags.REPETITION_TIME in d:
             repetition_time = d.get(dcm_tags.REPETITION_TIME, None).value
-            bids["RepetitionTimePreparation"] = repetition_time / 1000.0
+            bids["RepetitionTimePreparation"] = UnitConverterUtils.convert_milliseconds_to_seconds(repetition_time)
 
         return bids 
 

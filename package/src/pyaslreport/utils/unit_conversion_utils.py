@@ -29,3 +29,19 @@ class UnitConverterUtils:
         else:
             raise TypeError("Input must be an int, float, or list of int/float.")
 
+
+    def convert_milliseconds_to_seconds(values: int | float | list[int | float]) -> int | float | list[int | float]:
+        """
+        Convert milliseconds to seconds and round close values to integers.
+        Handles single numeric values or lists of values.
+        """
+        def convert_value(value):
+                return value / 1000.0
+
+        if ValidationUtils.is_valid_number(values):
+            return convert_value(values)
+        elif ValidationUtils.is_valid_list(values):
+            return [convert_value(value) for value in values]
+        else:
+            raise TypeError("Input must be an int, float, or list of int/float.")
+
