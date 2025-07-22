@@ -9,7 +9,11 @@ WORKDIR /app
 # Copy requirements and install
 COPY requirements.txt .
 
+RUN apt-get update && apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 libglib2.0-0
+
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+
 
 # Copy backend code (everything in this folder)
 COPY . .
