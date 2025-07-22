@@ -8,7 +8,6 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     SortingState,
     useReactTable,
@@ -17,7 +16,6 @@ import {
 import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
-import {Checkbox} from "@/components/ui/checkbox"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -39,80 +37,6 @@ import {
 import {useAppContext} from "@/providers/AppProvider";
 import {mapAslParametersToTable} from "@/utils";
 
-const data: Parameter[] = [
-    {
-        id: "1",
-        parameter: "ImagePatientPosition",
-        value: "HFS",
-    },
-    {
-        id: "2",
-        parameter: "ImageType",
-        value: "ORIGINAL\\PRIMARY\\AXIAL\\CT",
-    },
-    {
-        id: "3",
-        parameter: "Modality",
-        value: "CT",
-    },
-    {
-        id: "4",
-        parameter: "PatientID",
-        value: "123456",
-    },
-    {
-        id: "5",
-        parameter: "StudyInstanceUID",
-        value: "1.2.840.113619.2.55.3.604688.100.1.10000000000000000000",
-    },
-    {
-        id: "6",
-        parameter: "SeriesInstanceUID",
-        value: "1.2.840.113619.2.55.3.604688.100.1.10000000000000000001",
-    },
-    {
-        id: "7",
-        parameter: "SOPInstanceUID",
-        value: "1.2.840.113619.2.55.3.604688.100.1.10000000000000000002",
-    },
-    {
-        id: "8",
-        parameter: "StudyDate",
-        value: "20231001",
-    },
-    {
-        id: "9",
-        parameter: "SeriesNumber",
-        value: "1",
-    },
-    {
-        id: "10",
-        parameter: "InstanceNumber",
-        value: "1",
-    },
-    {
-        id: "11",
-        parameter: "SliceThickness",
-        value: "5.0",
-    },
-    {
-        id: "12",
-        parameter: "PixelSpacing",
-        value: "0.5\\0.5",
-    },
-    {
-        id: "13",
-        parameter: "ImageOrientationPatient",
-        value: "1\\0\\0\\0\\1\\0",
-    },
-    {
-        id: "14",
-        parameter: "ImagePositionPatient",
-        value: "0\\0\\0",
-    },
-]
-
-
 export type Parameter = {
     id: string
     parameter: string
@@ -120,28 +44,6 @@ export type Parameter = {
 }
 
 export const columns: ColumnDef<Parameter>[] = [
-    {
-        id: "select",
-        header: ({table}) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({row}) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
     {
         accessorKey: "parameter",
         header: ({column}) => {
@@ -201,27 +103,25 @@ export default function ParametersTable() {
     const [columnVisibility, setColumnVisibility] =
         useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
-    const [tableData, setTableData] = useState<Parameter[]>(data);
+    const [data, setData] = useState<Parameter[]>([]);
 
     const {apiData} = useAppContext();
 
     useEffect(() => {
         if (apiData && apiData.asl_parameters) {
-            console.log("API Data:", apiData.asl_parameters);
-            const mappedData = mapAslParametersToTable(apiData.asl_parameters);
-            console.log("Mapped Data:", mappedData);
-            setTableData(mappedData);
+            const combinedData = [...apiData.asl_parameters, ...apiData.m0_parameters];
+            const mappedData = mapAslParametersToTable(combinedData);
+            setData(mappedData);
         }
     }, [apiData]);
 
 
     const table = useReactTable({
-        data: tableData,
+        data: data,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
@@ -235,8 +135,8 @@ export default function ParametersTable() {
     })
 
     return (
-        <div className="flex flex-col gap-4 w-full">
-            <div className="flex items-center">
+        <div className="flex flex-col gap-4 w-full overflow-hidden">
+            <div className="flex items-center gap-2">
                 <Input
                     placeholder="Filter Parameters..."
                     value={(table.getColumn("parameter")?.getFilterValue() as string) ?? ""}
@@ -247,7 +147,7 @@ export default function ParametersTable() {
                 />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
+                        <Button variant="outline" className="ml-auto shrink-0">
                             Columns <ChevronDown/>
                         </Button>
                     </DropdownMenuTrigger>
@@ -272,15 +172,15 @@ export default function ParametersTable() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="rounded-md border">
-                <div className="max-h-72 overflow-auto">
-                    <Table>
+            <div className="rounded-md border h-full overflow-hidden">
+                <div className="max-h-96 overflow-auto">
+                    <Table className="w-full table-fixed">
                         <TableHeader className="bg-gray-100 dark:bg-secondary sticky top-0 z-10">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => {
                                         return (
-                                            <TableHead key={header.id}>
+                                            <TableHead key={header.id} className="w-1/2">
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(
@@ -301,11 +201,13 @@ export default function ParametersTable() {
                                         data-state={row.getIsSelected() && "selected"}
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext()
-                                                )}
+                                            <TableCell key={cell.id} className="w-1/2 px-4">
+                                                <div className="truncate">
+                                                    {flexRender(
+                                                        cell.column.columnDef.cell,
+                                                        cell.getContext()
+                                                    )}
+                                                </div>
                                             </TableCell>
                                         ))}
                                     </TableRow>

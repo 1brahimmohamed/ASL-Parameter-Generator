@@ -3,9 +3,7 @@ type Parameter = [string, string | number];
 interface IReportApiResponse {
     asl_parameters: Parameter[];
     basic_report: string;
-    errors: {
-        m0_error: string[][];
-    };
+    errors: {[key: string]: unknown};
     errors_concise: Record<string, unknown>;
     errors_concise_text: string;
     extended_parameters: Parameter[];
@@ -23,6 +21,7 @@ interface IReportApiResponse {
     warnings: Record<string, unknown>;
     warnings_concise: Record<string, unknown>;
     warnings_concise_text: string;
+    missing_required_parameters: string[];
 }
 
 export default IReportApiResponse;

@@ -3,28 +3,39 @@ import os
 from pyaslreport.io.writers import JSONWriter, TsvWriter
 from pyaslreport.io.readers import NiftiReader
 from pyaslreport.converters import DICOM2NiFTIConverter
+import pydicom
+from pyaslreport.utils import dicom_tags_utils as dcm_tags
 
 class ASLSequenceBase(ABC):
-    def __init__(self, dicom_header: dict):
+    def __init__(self, dicom_header: pydicom.Dataset):
         self.dicom_header = dicom_header
 
     @classmethod
     @abstractmethod
-    def matches(cls, dicom_header: dict) -> bool:
+    def matches(cls, dicom_header: pydicom.Dataset) -> bool:
         """Return True if this class can handle the given DICOM header."""
         pass
+
+    @classmethod
+    def get_specificity_score(cls) -> int:
+        """
+        Return a specificity score for this sequence class.
+        Higher scores indicate more specific matching criteria.
+        Override in subclasses to provide custom specificity.
+        """
+        return 0
 
     @abstractmethod
     def extract_bids_metadata(self) -> dict:
         """Extract and convert DICOM metadata to BIDS fields."""
         pass
 
-    @abstractmethod
-    def generate_asl_context(self, nifti_path: str):
-        """
-        Generate the ASL context for the sequence.
-        """
-        pass
+    # @abstractmethod
+    # def generate_asl_context(self, nifti_path: str):
+    #     """
+    #     Generate the ASL context for the sequence.
+    #     """
+    #     pass
 
     def _extract_common_metadata(self) -> dict:
         """Extract and convert common DICOM metadata fields to BIDS fields, including ms->s conversion where needed."""
@@ -34,27 +45,30 @@ class ASLSequenceBase(ABC):
 
         # Direct mappings
         for dicom_key, bids_key in [
-            ("Manufacturer", "Manufacturer"),
-            ("ManufacturersModelName", "ManufacturersModelName"),
-            ("SoftwareVersions", "SoftwareVersions"),
-            ("MagneticFieldStrength", "MagneticFieldStrength"),
-            ("MRAcquisitionType", "MRAcquisitionType"),
-            ("FlipAngle", "FlipAngle"),
+            (dcm_tags.MANUFACTURER, "Manufacturer"),
+            (dcm_tags.MANUFACTURERS_MODEL_NAME, "ManufacturersModelName"),
+            (dcm_tags.SOFTWARE_VERSIONS, "SoftwareVersions"),
+            (dcm_tags.MAGNETIC_FIELD_STRENGTH, "MagneticFieldStrength"),
+            (dcm_tags.MR_ACQUISITION_TYPE, "MRAcquisitionType"),
+            (dcm_tags.FLIP_ANGLE, "FlipAngle"),
         ]:
             if dicom_key in d:
-                bids[bids_key] = d[dicom_key]
+                bids[bids_key] = d.get(dicom_key, None).value
 
         # ms->s conversion for EchoTime (can be array)
-        if "EchoTime" in d:
-            et = d["EchoTime"]
-            if isinstance(et, (list, tuple)):
-                bids["EchoTime"] = [v / 1000.0 for v in et]
+        if dcm_tags.ECHO_TIME in d:
+            echo_time = d.get(dcm_tags.ECHO_TIME, None).value
+
+            # 
+            if isinstance(echo_time, (list, tuple)):
+                bids["EchoTime"] = [v / 1000.0 for v in echo_time]
             else:
-                bids["EchoTime"] = et / 1000.0
+                bids["EchoTime"] = echo_time / 1000.0
 
         # ms->s conversion for RepetitionTimePreparation
-        if "RepetitionTime" in d:
-            bids["RepetitionTimePreparation"] = d["RepetitionTime"] / 1000.0
+        if dcm_tags.REPETITION_TIME in d:
+            repetition_time = d.get(dcm_tags.REPETITION_TIME, None).value
+            bids["RepetitionTimePreparation"] = repetition_time / 1000.0
 
         return bids 
 

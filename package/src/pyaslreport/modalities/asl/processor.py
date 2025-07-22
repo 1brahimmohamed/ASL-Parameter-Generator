@@ -13,6 +13,7 @@ from pyaslreport.modalities.asl.validator import ASLValidator
 from pyaslreport.modalities.base_processor import BaseProcessor
 from pyaslreport.modalities.asl.constants import DURATION_OF_EACH_RFBLOCK
 from pyaslreport.utils.unit_conversion_utils import UnitConverterUtils
+from pyaslreport.core.config import config
 
 
 @dataclass
@@ -508,6 +509,24 @@ class ASLProcessor(BaseProcessor):
         # Prepare parameters
         parameters = self._prepare_parameters(context, M0_TR, reports)
 
+        required_condition_schema = config['schemas']['required_condition_schema']
+        missing_required_parameters = []
+        for idx, session in enumerate(context.asl_json_data):
+            asl_type = session.get('ArterialSpinLabelingType', None)
+            for param, condition in required_condition_schema.items():
+                # Determine if this param is required for this ASL type
+                is_required = False
+                if condition == 'all':
+                    is_required = True
+                elif isinstance(condition, dict):
+                    asl_type_list = condition.get('ArterialSpinLabelingType', [])
+                    if isinstance(asl_type_list, str):
+                        asl_type_list = [asl_type_list]
+                    if asl_type and asl_type in asl_type_list:
+                        is_required = True
+                if is_required and param not in session:
+                    missing_required_parameters.append(param)
+
         return {
             "major_errors": combined_major_errors,
             "major_errors_concise": combined_major_errors_concise,
@@ -528,7 +547,8 @@ class ASLProcessor(BaseProcessor):
             "m0_concise_warning": "\n".join(m0_concise_warning),
             "asl_parameters": parameters["asl"],
             "m0_parameters": parameters["m0"],
-            "extended_parameters": parameters["extended"]
+            "extended_parameters": parameters["extended"],
+            "missing_required_parameters": missing_required_parameters
         }
 
     def _generate_concise_texts(self, combined_major_errors_concise: Dict, combined_errors_concise: Dict, combined_warnings_concise: Dict) -> Dict[str, str]:

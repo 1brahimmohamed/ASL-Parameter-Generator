@@ -11,6 +11,7 @@ dependencies = [
     "numpy~=2.2.6",
     "nibabel~=5.3.2",
     "pydicom~=3.0.1",
+    "dicom2nifti~=2.6.2",
 ]
 
 [build-system]

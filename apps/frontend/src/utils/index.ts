@@ -5,11 +5,13 @@ import {
 } from './searchFoldersUtils';
 
 import {mapAslParametersToTable} from './mappingUtils';
-
+import {countErrorsAndWarnings} from './countingUtils';
 
 export {
     findFileInFolder,
     findRelevantFiles,
     findNiftiFile,
-    mapAslParametersToTable
+    mapAslParametersToTable,
+    countErrorsAndWarnings
 };
+

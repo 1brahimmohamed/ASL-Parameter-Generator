@@ -1,1 +1,1 @@
-from .main import generate_report
+from .main import generate_report, get_bids_metadata
