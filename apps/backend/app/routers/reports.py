@@ -4,6 +4,11 @@ from typing import List, Optional
 from .data import data
 from pyaslreport import generate_report
 from pyaslreport.enums import ModalityTypeValues
+from fastapi.responses import FileResponse
+import tempfile
+from weasyprint import HTML
+from app.utils.report_template import render_report_html
+
 
 report_router = APIRouter(prefix="/report")
 
@@ -49,6 +54,28 @@ async def get_report(
     
     return report
 
+
+@report_router.post("/missing-parameters", response_model=dict, status_code=status.HTTP_200_OK)
+async def submit_missing_parameters(missing_params: dict):
+    """
+    Receives a dictionary of missing parameters and their values.
+    """
+    print(missing_params)
+    return {"message": "Missing parameters submitted successfully"}
+
+
+
+
+@report_router.post("/report-pdf")
+async def download_pdf(report_data: dict):
+    print("--------------------------------")
+    print(report_data["report_data"]["asl_parameters"])
+    print("--------------------------------")
+    html_content = render_report_html(report_data["report_data"])
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+        HTML(string=html_content).write_pdf(tmp.name)
+        tmp_path = tmp.name
+    return FileResponse(tmp_path, media_type="application/pdf", filename="report.pdf")
 
 async def save_upload(upload: UploadFile, base_dir="uploads"):
     # Use the filename as a relative path if needed
