@@ -1,8 +1,8 @@
 "use client";
 
 import {useRef} from "react";
-import {Card, CardTitle} from "../ui/card";
-import {Button} from "../ui/button";
+import {Card, CardTitle} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
 import {ClipboardCopy, Download} from "lucide-react";
 import { toast } from "sonner";
 

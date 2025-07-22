@@ -3,7 +3,7 @@
 import React, {useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
-import {UploadDataType, UploadModalityType} from "../../enums";
+import {UploadDataType, UploadModalityType} from "@/enums";
 import {Upload as UploadIcon} from "lucide-react";
 import {useAppContext} from "@/providers/AppProvider";
 import {findNiftiFile, findRelevantFiles} from "@/utils";

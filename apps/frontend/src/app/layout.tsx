@@ -9,8 +9,8 @@ import {
     SidebarProvider,
 } from "@/components/ui/sidebar"
 
-import AppSidebar from "@/components/layout/AppSidebar";
-import SiteHeader from "@/components/layout/SideHeader";
+import AppSidebar from "@/app/_layout/AppSidebar";
+import SiteHeader from "@/app/_layout/SideHeader";
 import Spinner from "@/components/general/Spinner";
 import { Toaster } from "sonner"
 

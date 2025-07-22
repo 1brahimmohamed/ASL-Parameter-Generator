@@ -1,8 +1,8 @@
 import {Card, CardContent} from "@/components/ui/card";
 
-import UploadButtons from "@/components/home/UploadButtons";
-import WhatIsThisTool from "@/components/home/WhatIsThisTool";
-import HowToUseTheTool from "@/components/home/HowToUseTheTool";
+import UploadButtons from "@/app/_home/UploadButtons";
+import WhatIsThisTool from "@/app/_home/WhatIsThisTool";
+import HowToUseTheTool from "@/app/_home/HowToUseTheTool";
 
 
 const HomePage = () => {

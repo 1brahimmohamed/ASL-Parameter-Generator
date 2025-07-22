@@ -1,6 +1,6 @@
 "use client";
 
-import ErrorsCard from "@/components/errors/ErrorsCard";
+import ErrorsCard from "@/app/report/errors/_components/ErrorsCard";
 import {useAppContext} from "@/providers/AppProvider";
 
 // Helper to flatten error objects to string array

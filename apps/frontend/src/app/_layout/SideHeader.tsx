@@ -1,11 +1,30 @@
+"use client";
+
 import {Button} from "@/components/ui/button"
 import {Separator} from "@/components/ui/separator"
 import {SidebarTrigger} from "@/components/ui/sidebar"
-import {IconBrandGithub, IconFileTypeDoc} from '@tabler/icons-react';
-import ThemeToggle from "@/components/layout/ThemeToggle"
-
+import { IconBrandGithub, IconFileTypeDoc, IconBriefcase2 } from '@tabler/icons-react';
+import ThemeToggle from "@/app/_layout/ThemeToggle"
+import { getReportPdf } from "@/services/apiReport";
+import { useAppContext } from "@/providers/AppProvider";
 
 const SiteHeader = () => {
+
+    const { apiData } = useAppContext();
+
+
+    const handlePdfDownload = () => {
+
+        const reportData = {
+            basic_report: apiData?.basic_report,
+            extended_report: apiData?.extended_report,
+            asl_parameters: apiData?.asl_parameters || {},
+            missing_parameters: apiData?.missing_required_parameters || []
+        }
+
+        getReportPdf(reportData)
+    }
+
     return (
         <header
             className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -17,6 +36,16 @@ const SiteHeader = () => {
                 />
                 <h1 className="text-base font-medium">OSIPI ASL Reporting Tool</h1>
                 <div className="ml-auto flex items-center gap-2">
+
+                    {apiData?.basic_report && (
+                        <Button variant="ghost" asChild size="sm" className="hidden sm:flex hover:cursor-pointer" onClick={handlePdfDownload}>
+                           <span>
+                                <IconFileTypeDoc />
+                                Download PDF Report
+                           </span>
+                        </Button>
+                    )}
+
                     <ThemeToggle/>
 
                     <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
@@ -27,7 +56,7 @@ const SiteHeader = () => {
                             target="_blank"
                             className="dark:text-foreground"
                         >
-                            <IconFileTypeDoc/>
+                            <IconBriefcase2 />
                             Documentation
                         </a>
                     </Button>

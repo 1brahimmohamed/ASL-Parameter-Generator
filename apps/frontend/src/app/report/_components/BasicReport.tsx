@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 import {useAppContext} from "@/providers/AppProvider";
-import GeneratedMethods from "@/components/reports/GeneratedMethods";
+import GeneratedMethods from "@/app/report/_components/GeneratedMethods";
 
 const BasicReport = () => {
     const [text, setText] = useState("");

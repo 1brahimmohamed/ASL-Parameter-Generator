@@ -1,7 +1,7 @@
 "use client";
 
 import {useAppContext} from "@/providers/AppProvider";
-import WarningsCard from "@/components/warnings/WarningsCard";
+import WarningsCard from "@/app/report/warnings/_components/WarningsCard";
 
 // Helper to flatten warning objects to string array
 function flattenWarnings(obj: unknown): string[] {

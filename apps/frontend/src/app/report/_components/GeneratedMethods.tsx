@@ -2,18 +2,15 @@
 
 import {useState, useRef, useEffect} from "react";
 import {Textarea} from "@/components/ui/textarea";
-import {Card} from "../ui/card";
-import {Button} from "../ui/button";
+import {Card} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
 import {ClipboardCopy, Download} from "lucide-react";
 import { toast } from "sonner"
-import { getReportPdf } from "@/services/apiReport";
-import { useAppContext } from "@/providers/AppProvider";
 
 export default function GeneratedMethods({text: initialText, type}: { text: string, type: string }) {
     const [text, setText] = useState(initialText);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const {apiData} = useAppContext();
     
     useEffect(() => {
         setText(initialText);
@@ -56,24 +53,12 @@ export default function GeneratedMethods({text: initialText, type}: { text: stri
         }
     };
 
-    const handlePdfDownload = () => {
-
-        const reportData = {
-            basic_report: apiData?.basic_report,
-            extended_report: apiData?.extended_report,
-            asl_parameters: apiData?.asl_parameters || {},
-            missing_parameters: apiData?.missing_required_parameters || []
-        }
-
-        getReportPdf(reportData)
-    }
-
     return (
         <Card className="h-full py-0 p-2 bg-gray-50 dark:bg-secondary relative">
 
             <div className="absolute top-2 right-2 z-10 flex gap-0.5">
                 <Button
-                    onClick={handlePdfDownload}
+                    onClick={handleDownload}
                     size="sm"
                     variant="ghost"
                     className="hover:bg-gray-200 dark:hover:bg-gray-700"

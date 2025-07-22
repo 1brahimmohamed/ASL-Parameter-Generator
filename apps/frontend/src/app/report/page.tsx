@@ -1,8 +1,8 @@
-import MissingParameters from "@/components/reports/MissingParameters";
-import BasicReport from "@/components/reports/BasicReport";
-import ExtendedReport from "@/components/reports/ExtendedReport";
+import MissingParameters from "@/app/report/_components/MissingParameters";
+import BasicReport from "@/app/report/_components/BasicReport";
+import ExtendedReport from "@/app/report/_components/ExtendedReport";
 import CardWithTitle from "@/components/general/CardWithTitle";
-import ParametersTable from "@/components/reports/ParametersTable";
+import ParametersTable from "@/app/report/_components/ParametersTable";
 
 export default function Home() {
 
