@@ -32,7 +32,7 @@ class BaseSequence(ABC):
 
     def _extract_common_metadata(self) -> dict:
         """Extract and convert common DICOM metadata fields to BIDS fields, including ms->s conversion where needed."""
-        d = self.dicom_header
+        dataset = self.dicom_header
         
         bids = {}
 
@@ -45,17 +45,17 @@ class BaseSequence(ABC):
             (dcm_tags.MR_ACQUISITION_TYPE, "MRAcquisitionType"),
             (dcm_tags.FLIP_ANGLE, "FlipAngle"),
         ]:
-            if dicom_key in d:
-                bids[bids_key] = d.get(dicom_key, None).value
+            if dicom_key in dataset:
+                bids[bids_key] = dataset.get(dicom_key, None).value
 
         # ms->s conversion for EchoTime (can be array)
-        if dcm_tags.ECHO_TIME in d:
-            echo_time = d.get(dcm_tags.ECHO_TIME, None).value
+        if dcm_tags.ECHO_TIME in dataset:
+            echo_time = dataset.get(dcm_tags.ECHO_TIME, None).value
             bids["EchoTime"] = UnitConverterUtils.convert_milliseconds_to_seconds(echo_time)
 
         # ms->s conversion for RepetitionTimePreparation
-        if dcm_tags.REPETITION_TIME in d:
-            repetition_time = d.get(dcm_tags.REPETITION_TIME, None).value
+        if dcm_tags.REPETITION_TIME in dataset:
+            repetition_time = dataset.get(dcm_tags.REPETITION_TIME, None).value
             bids["RepetitionTimePreparation"] = UnitConverterUtils.convert_milliseconds_to_seconds(repetition_time)
 
         return bids 

@@ -16,10 +16,14 @@ class GEBasicSinglePLD(GEASLBase):
         bids.update(self._extract_ge_common_metadata())
         bids.update(self._extract_ge_common_asl_metadata())
 
-        d = self.dicom_header
-        if dcm_tags.GE_LABEL_DURATION in d:
-            bids["LabelingDuration"] = d.get(dcm_tags.GE_LABEL_DURATION, None).value
-        if dcm_tags.GE_INVERSION_TIME in d:
-            bids["PostLabelingDelay"] = d.get(dcm_tags.GE_INVERSION_TIME, None).value
+        dicom_header = self.dicom_header
+        if dcm_tags.GE_LABEL_DURATION in dicom_header:
+            bids["LabelingDuration"] = dicom_header.get(dcm_tags.GE_LABEL_DURATION, None).value
+        if dcm_tags.GE_INVERSION_TIME in dicom_header:
+            bids["PostLabelingDelay"] = dicom_header.get(dcm_tags.GE_INVERSION_TIME, None).value
+
+        
+        bids["ASLContext"] = self._generate_asl_context(1)
+
         return bids 
 
