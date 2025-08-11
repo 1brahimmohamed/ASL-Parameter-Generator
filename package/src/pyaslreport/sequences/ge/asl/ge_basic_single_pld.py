@@ -22,3 +22,4 @@ class GEBasicSinglePLD(GEASLBase):
         if dcm_tags.GE_INVERSION_TIME in d:
             bids["PostLabelingDelay"] = d.get(dcm_tags.GE_INVERSION_TIME, None).value
         return bids 
+

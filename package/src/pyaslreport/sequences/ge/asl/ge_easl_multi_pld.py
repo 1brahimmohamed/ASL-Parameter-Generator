@@ -22,18 +22,6 @@ class GEMultiPLD(GEASLBase):
         bids.update(self._extract_ge_common_asl_metadata())
 
         d = self.dicom_header
-        # eASL-specific tags
-        # for dicom_key, bids_key in [
-        #     (dcm_tags.GE_PRIVATE_CV4, "GEPrivateCV4"),
-        #     (dcm_tags.GE_PRIVATE_CV5, "GEPrivateCV5"),
-        #     (dcm_tags.GE_PRIVATE_CV6, "GEPrivateCV6"),
-        #     (dcm_tags.GE_PRIVATE_CV7, "GEPrivateCV7"),
-        #     (dcm_tags.GE_PRIVATE_CV8, "GEPrivateCV8"),
-        #     (dcm_tags.GE_PRIVATE_CV9, "GEPrivateCV9"),
-        # ]:
-        #     if dicom_key in d:
-        #         bids[bids_key] = d.get(dicom_key, None).value
-
         # ArterialSpinLabelingType is always 'PCASL'
         bids["ArterialSpinLabelingType"] = "PCASL"
 
