@@ -43,7 +43,7 @@ const ErrorsCard = ({errors, title}: {errors: string[], title: string}) => {
     };
 
     return (
-        <Card className="bg-red-50 h-full dark:bg-red-100 text-red-800 dark:text-red-200 p-4 relative">
+        <Card className="bg-red-500/5 h-full text-red-800 dark:text-red-200 p-4 relative">
             <CardTitle className="text-2xl text-foreground font-light">
                 {title}
             </CardTitle>

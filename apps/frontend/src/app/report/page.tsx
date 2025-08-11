@@ -1,10 +1,18 @@
+"use client";
 import MissingParameters from "@/app/report/_components/MissingParameters";
 import BasicReport from "@/app/report/_components/BasicReport";
 import ExtendedReport from "@/app/report/_components/ExtendedReport";
 import CardWithTitle from "@/components/general/CardWithTitle";
 import ParametersTable from "@/app/report/_components/ParametersTable";
+import {useAppContext} from "@/providers/AppProvider";
 
 export default function Home() {
+
+    const {apiData} = useAppContext();
+
+    if (!apiData.asl_parameters) {
+        return <NoReport />;
+    }
 
     return (
         <div className="flex gap-4 h-full w-full p-5 ">
@@ -35,3 +43,13 @@ export default function Home() {
         </div>
     );
 }
+
+
+const NoReport = () => {
+  return (
+    <div className="flex flex-col items-center justify-center h-full">
+      <h1 className="text-2xl font-bold mb-4">No Report Available</h1>
+      <p className="text-gray-600">No report data available, please upload files to generate a report.</p>
+    </div>
+  );
+};
