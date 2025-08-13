@@ -25,26 +25,20 @@
         "href": "/",
         "icon": "rocket"
       }
-
     ]
   },
   {
     "group": "User Guide",
     "pages": [
       {
-        "title": "Package",
-        "href": "/user-guide/package",
-        "icon": "cubes"
+        "title": "Quick Start",
+        "href": "/user-guide/quick-start",
+        "icon": "rocket"
       },
       {
         "title": "UI",
         "href": "/user-guide/ui",
         "icon": "tv"
-      },
-      {
-        "title": "Sample data",
-        "href": "/user-guide/sample-data",
-        "icon": "database"
       }
     ]
   },
@@ -60,6 +54,36 @@
         "title": "Architecture",
         "href": "/development/architecture",
         "icon": "sitemap"
+      },
+      {
+        "title": "Folder Structure",
+        "href": "/development/folder-structure",
+        "icon": "folder"
+      },
+      {
+        "title": "API Reference",
+        "href": "/development/api-reference",
+        "icon": "code"
+      },
+      {
+        "title": "Contributing",
+        "href": "/development/contributing",
+        "icon": "arrow-up-right-from-square"
+      },
+      {
+        "title": "Sample data",
+        "href": "/user-guide/sample-data",
+        "icon": "database"
+      }
+    ]
+  },
+  {
+    "group": "Next Steps",
+    "pages": [
+      {
+        "title": "Next Steps",
+        "href": "/next-steps",
+        "icon": "arrow-up-right-from-square"
       }
     ]
   }
