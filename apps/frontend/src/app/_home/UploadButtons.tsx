@@ -23,7 +23,7 @@ const UploadButtons = () => {
   const [activeModalityTypeOption, setActiveModalityTypeOption] =
     useState<TUploadModalOptions>(UploadModalityType.ASL);
   const folderInputRef = useRef<HTMLInputElement>(null);
-  const { setIsLoading, setApiData, setUploadedFiles, setUploadConfig } =
+  const { setIsLoading, setApiData, setUploadedFiles, setUploadConfig, setUpdatedJsonContent, setUpdatedJsonFilename } =
     useAppContext();
   const router = useRouter();
 
@@ -69,6 +69,10 @@ const UploadButtons = () => {
           modalityType: activeModalityTypeOption,
           fileType: activeFileTypeOption,
         });
+
+        // Clear any previously updated JSON content when new files are uploaded
+        setUpdatedJsonContent(null);
+        setUpdatedJsonFilename('');
 
         formData.append("modality_type", activeModalityTypeOption);
         formData.append("files_type", activeFileTypeOption);

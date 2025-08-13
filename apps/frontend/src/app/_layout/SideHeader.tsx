@@ -3,14 +3,14 @@
 import {Button} from "@/components/ui/button"
 import {Separator} from "@/components/ui/separator"
 import {SidebarTrigger} from "@/components/ui/sidebar"
-import { IconBrandGithub, IconFileTypeDoc, IconBriefcase2 } from '@tabler/icons-react';
+import { IconBrandGithub, IconFileTypeDoc, IconBriefcase2, IconFileTypeJs } from '@tabler/icons-react';
 import ThemeToggle from "@/app/_layout/ThemeToggle"
-import { getReportPdf } from "@/services/apiReport";
+import { getReportPdf, downloadUpdatedJson } from "@/services/apiReport";
 import { useAppContext } from "@/providers/AppProvider";
 
 const SiteHeader = () => {
 
-    const { apiData } = useAppContext();
+    const { apiData, updatedJsonContent, updatedJsonFilename } = useAppContext();
 
 
     const handlePdfDownload = () => {
@@ -25,6 +25,12 @@ const SiteHeader = () => {
         getReportPdf(reportData)
     }
 
+    const handleJsonDownload = () => {
+        if (updatedJsonContent) {
+            downloadUpdatedJson(updatedJsonContent, updatedJsonFilename);
+        }
+    }
+
     return (
         <header
             className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -37,6 +43,15 @@ const SiteHeader = () => {
                 <h1 className="text-base font-medium">OSIPI ASL Reporting Tool</h1>
                 <div className="ml-auto flex items-center gap-2">
 
+                    {updatedJsonContent && (
+                        <Button variant="ghost" asChild size="sm" className="hidden sm:flex hover:cursor-pointer" onClick={handleJsonDownload}>
+                            <span>
+                                <IconFileTypeJs />
+                                Download Updated JSON
+                            </span>
+                        </Button>
+                    )}
+
                     {apiData?.basic_report && (
                         <Button variant="ghost" asChild size="sm" className="hidden sm:flex hover:cursor-pointer" onClick={handlePdfDownload}>
                            <span>
@@ -45,6 +60,8 @@ const SiteHeader = () => {
                            </span>
                         </Button>
                     )}
+
+                    
 
                     <ThemeToggle/>
 

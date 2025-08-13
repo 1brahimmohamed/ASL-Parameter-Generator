@@ -14,6 +14,10 @@ type AppContextType = {
     setUploadedFiles: (files: IAllRelevantFilesType) => void;
     uploadConfig: {modalityType: string; fileType: string;} | null;
     setUploadConfig: (config: {modalityType: string; fileType: string;} | null) => void;
+    updatedJsonContent: any;
+    setUpdatedJsonContent: (content: any) => void;
+    updatedJsonFilename: string;
+    setUpdatedJsonFilename: (filename: string) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -23,6 +27,8 @@ export const AppProvider = ({children}: { children: ReactNode }) => {
     const [apiData, setApiDataState] = useState<IReportApiResponse>({} as IReportApiResponse);
     const [uploadedFiles, setUploadedFiles] = useState<IAllRelevantFilesType>({} as IAllRelevantFilesType);
     const [uploadConfig, setUploadConfig] = useState<{modalityType: string; fileType: string;} | null>(null);
+    const [updatedJsonContent, setUpdatedJsonContent] = useState<any>(null);
+    const [updatedJsonFilename, setUpdatedJsonFilename] = useState<string>('');
 
     // Function to set new API data
     const setApiData = (data: IReportApiResponse) => {
@@ -32,6 +38,8 @@ export const AppProvider = ({children}: { children: ReactNode }) => {
     // Function to clear API data
     const clearApiData = () => {
         setApiDataState({} as IReportApiResponse);
+        setUpdatedJsonContent(null);
+        setUpdatedJsonFilename('');
     };
 
     return (
@@ -44,7 +52,11 @@ export const AppProvider = ({children}: { children: ReactNode }) => {
             uploadedFiles,
             setUploadedFiles,
             uploadConfig,
-            setUploadConfig
+            setUploadConfig,
+            updatedJsonContent,
+            setUpdatedJsonContent,
+            updatedJsonFilename,
+            setUpdatedJsonFilename
         }}>
             {children}
         </AppContext.Provider>

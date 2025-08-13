@@ -11,7 +11,7 @@ import {ASLRelevantFileNames} from '@/enums';
 import { toast } from "sonner";
 
 export default function MissingParameters() {
-  const { apiData, uploadedFiles, uploadConfig, setIsLoading, setApiData } =
+  const { apiData, uploadedFiles, uploadConfig, setIsLoading, setApiData, setUpdatedJsonContent, setUpdatedJsonFilename } =
     useAppContext();
   const missingParams = apiData?.missing_required_parameters || [];
   const [paramValues, setParamValues] = useState<Record<string, string>>({});
@@ -98,6 +98,10 @@ export default function MissingParameters() {
                   // Use the converted parameters instead of raw string values
                   const updatedContent = { ...jsonContent, ...convertedParams };
                   console.log("Updated JSON content:", updatedContent);
+
+                  // Store the updated JSON content in context for download
+                  setUpdatedJsonContent(updatedContent);
+                  setUpdatedJsonFilename(file.name);
 
                   const updatedBlob = new Blob(
                     [JSON.stringify(updatedContent, null, 2)],
