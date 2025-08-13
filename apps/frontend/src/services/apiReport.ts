@@ -63,7 +63,7 @@ const getReportPdf = async (reportData: Partial<IReportApiResponse>) => {
     }
 }
 
-const downloadUpdatedJson = (jsonContent: any, filename: string = 'updated_asl_parameters.json') => {
+const downloadUpdatedJson = (jsonContent: Record<string, unknown>, filename: string = 'updated_asl_parameters.json') => {
     try {
         const jsonString = JSON.stringify(jsonContent, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });

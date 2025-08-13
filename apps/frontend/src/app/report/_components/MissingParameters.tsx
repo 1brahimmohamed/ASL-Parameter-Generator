@@ -162,7 +162,7 @@ export default function MissingParameters() {
       formData.append("files_type", uploadConfig.fileType);
 
       console.log("FormData entries:");
-      for (let [key, value] of formData.entries()) {
+      for (const [key, value] of formData.entries()) {
         if (value instanceof File) {
           console.log(key, `File: ${value.name} (${value.size} bytes)`);
         } else {
@@ -197,26 +197,34 @@ export default function MissingParameters() {
       } else {
         toast.error("Failed to regenerate report. Please try again.");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsLoading(false);
       console.error("Full error details:", error);
 
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as {
+          response: {
+            data?: { detail?: string; message?: string };
+            status: number;
+          };
+        };
+        console.error("Response data:", axiosError.response.data);
+        console.error("Response status:", axiosError.response.status);
 
-        if (error.response.data?.detail) {
-          toast.error(`Server error: ${error.response.data.detail}`);
-        } else if (error.response.data?.message) {
-          toast.error(`Server error: ${error.response.data.message}`);
+        if (axiosError.response.data?.detail) {
+          toast.error(`Server error: ${axiosError.response.data.detail}`);
+        } else if (axiosError.response.data?.message) {
+          toast.error(`Server error: ${axiosError.response.data.message}`);
         } else {
           toast.error(
-            `Server error (${error.response.status}): Please check the server logs`
+            `Server error (${axiosError.response.status}): Please check the server logs`
           );
         }
       } else {
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
         toast.error(
-          `An error occurred while updating parameters: ${error.message}`
+          `An error occurred while updating parameters: ${errorMessage}`
         );
       }
     }
