@@ -1,22 +1,23 @@
-from pyaslreport.sequences.asl.base_sequence import ASLSequenceBase
+from pyaslreport.sequences.base_sequence import BaseSequence
 from pyaslreport.utils import dicom_tags_utils as dcm_tags
 
-class GEBaseSequence(ASLSequenceBase):
+class SiemensBaseSequence(BaseSequence):
     @classmethod
-    def is_ge_manufacturer(cls, dicom_header):
+    def is_siemens_manufacturer(cls, dicom_header):
         """
-        Check if the manufacturer contains GE or General Electric.
+        Check if the manufacturer contains Siemens.
         
         Args:
             dicom_header: DICOM header dictionary
             
         Returns:
-            bool: True if manufacturer contains GE or General Electric
+            bool: True if manufacturer contains Siemens
         """
         manufacturer = dicom_header.get(dcm_tags.MANUFACTURER, "").value.strip().upper()
-        return "GE" in manufacturer or "GENERAL ELECTRIC" in manufacturer
+        return "SIEMENS" in manufacturer or "SIEMENS HEALTHCARE" in manufacturer or "SIEMENS HEALHINEERS" in manufacturer
 
-    def _extract_ge_common_metadata(self) -> dict:
+
+    def _extract_siemens_common_metadata(self) -> dict:
         d = self.dicom_header
         bids = {}
         # Direct GE-specific mappings

@@ -1,10 +1,13 @@
 from pyaslreport.enums.modaliy_enum import ModalityTypeValues
-from pyaslreport.sequences.asl.ge import GEBasicSinglePLD, GEMultiPLD
-from pyaslreport.sequences.dsc.base_sequence import DSCSequenceBase
+from pyaslreport.sequences.ge.asl import GEBasicSinglePLD, GEMultiPLD
+from pyaslreport.sequences.ge.dsc import GEDSCSequence
+from pyaslreport.sequences.siemens.asl import SiemensBasicSinglePLD
+from pyaslreport.sequences.siemens.dsc import SiemensDSCSequence
+
 import pydicom
 
-ASL_SEQUENCE_CLASSES = [GEBasicSinglePLD, GEMultiPLD]
-DSC_SEQUENCE_CLASSES = [DSCSequenceBase]
+ASL_SEQUENCE_CLASSES = [GEBasicSinglePLD, GEMultiPLD, SiemensBasicSinglePLD]
+DSC_SEQUENCE_CLASSES = [GEDSCSequence, SiemensDSCSequence]
 
 def get_sequence(modality: str, dicom_header: pydicom.Dataset):
     match modality:

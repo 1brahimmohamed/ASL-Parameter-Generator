@@ -44,7 +44,7 @@ const WarningsCard = ({warnings, title}: {warnings: string[], title: string}) =>
     };
 
     return (
-        <Card className="bg-yellow-50 h-full dark:bg-yellow-100 text-yellow-800 dark:text-yelow-200 p-4 relative">
+        <Card className="bg-yellow-500/5 h-full text-yellow-800 dark:text-yelow-200 p-4 relative">
             <CardTitle className="text-2xl text-foreground font-light">
                 {title}
             </CardTitle>

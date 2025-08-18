@@ -26,7 +26,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:!p-2 h-14">
-              <Link href="/public">
+              <Link href="/">
                 <Image
                   src="/logo/full_logo.webp"
                   alt="OSIPI Logo"

@@ -63,8 +63,27 @@ const getReportPdf = async (reportData: Partial<IReportApiResponse>) => {
     }
 }
 
+const downloadUpdatedJson = (jsonContent: Record<string, unknown>, filename: string = 'updated_asl_parameters.json') => {
+    try {
+        const jsonString = JSON.stringify(jsonContent, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const fileURL = window.URL.createObjectURL(blob);
+        const fileLink = document.createElement('a');
+        fileLink.href = fileURL;
+        fileLink.setAttribute('download', filename);
+        document.body.appendChild(fileLink);
+        fileLink.click();
+        document.body.removeChild(fileLink);
+        window.URL.revokeObjectURL(fileURL);
+    } catch (error) {
+        console.error('Error downloading updated JSON:', error);
+        throw error;
+    }
+}
+
 export {
     getReport,
     postMissingParameters,
     getReportPdf,
+    downloadUpdatedJson,
 }

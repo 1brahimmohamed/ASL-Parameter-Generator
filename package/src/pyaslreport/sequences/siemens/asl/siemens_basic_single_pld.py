@@ -1,10 +1,10 @@
-from .ge_base import GEBaseSequence
+from pyaslreport.sequences.siemens.siemens_base import SiemensBaseSequence
 from pyaslreport.utils import dicom_tags_utils as dcm_tags
 
-class GEBasicSinglePLD(GEBaseSequence):
+class SiemensBasicSinglePLD(SiemensBaseSequence):
     @classmethod
     def matches(cls, dicom_header):
-        return cls.is_ge_manufacturer(dicom_header)
+        return cls.is_siemens_manufacturer(dicom_header)
         
     @classmethod
     def get_specificity_score(cls) -> int:
@@ -13,7 +13,7 @@ class GEBasicSinglePLD(GEBaseSequence):
 
     def extract_bids_metadata(self):
         bids = self._extract_common_metadata()
-        bids.update(self._extract_ge_common_metadata())
+        bids.update(self._extract_siemens_common_metadata())
         d = self.dicom_header
         if dcm_tags.GE_LABEL_DURATION in d:
             bids["LabelingDuration"] = d.get(dcm_tags.GE_LABEL_DURATION, None).value
