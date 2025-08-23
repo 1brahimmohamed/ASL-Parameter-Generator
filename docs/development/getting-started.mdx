@@ -42,7 +42,7 @@ This command will:
 - Make the application available at:
   - Frontend: http://localhost:3000
   - Backend API: http://localhost:8000
-  - API Documentation: http://localhost:8000/docs\
+  - API Documentation: http://localhost:8000/docs
 - Enable changes in the containers
 
 ### 3. Access the Application
@@ -207,50 +207,9 @@ sample_dataset/
 └── dataset_description.json
 ```
 
-## Troubleshooting
 
-### Common Issues
 
-#### 1. Docker Issues
-```bash
-# If containers fail to start, check logs
-docker-compose logs
-
-# Rebuild containers if needed
-docker-compose down
-docker-compose up --build
-```
-
-#### 2. Port Conflicts
-If ports 3000 or 8000 are already in use:
-```bash
-# Check what's using the ports
-# On Windows:
-netstat -ano | findstr :3000
-netstat -ano | findstr :8000
-
-# On macOS/Linux:
-lsof -i :3000
-lsof -i :8000
-```
-
-#### 3. Python Package Issues
-```bash
-# If the package installation fails
-cd package
-pip install --upgrade pip
-pip install -e . --force-reinstall
-```
-
-#### 4. Frontend Build Issues
-```bash
-# Clear node modules and reinstall
-cd apps/frontend
-rm -rf node_modules
-yarn install
-```
-
-## 🚀 Development Workflow
+## Development Workflow
 
 ### 1. Making Changes
 ```bash
