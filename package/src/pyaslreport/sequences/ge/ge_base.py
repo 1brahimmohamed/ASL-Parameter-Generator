@@ -22,20 +22,18 @@ class GEBaseSequence(BaseSequence):
         # Direct GE-specific mappings
         if dcm_tags.GE_ASSET_R_FACTOR in dataset:
             bids_ge["AssetRFactor"] = dataset.get(dcm_tags.GE_ASSET_R_FACTOR, None).value
-        if dcm_tags.GE_EFFECTIVE_ECHO_SPACING in dataset:
-            bids_ge["EffectiveEchoSpacing"] = dataset.get(dcm_tags.GE_EFFECTIVE_ECHO_SPACING, None).value
         if dcm_tags.GE_ACQUISITION_MATRIX in dataset:
             bids_ge["AcquisitionMatrix"] = dataset.get(dcm_tags.GE_ACQUISITION_MATRIX, None).value
         if dcm_tags.GE_NUMBER_OF_EXCITATIONS in dataset:
             bids_ge["TotalAcquiredPairs"] = dataset.get(dcm_tags.GE_NUMBER_OF_EXCITATIONS, None).value
             
         # Derived fields
-        # EffectiveEchoSpacing = EffectiveEchoSpacing * AssetRFactor * 1e-6
+        # EffectiveEchoSpacing = GE EffectiveEchoSpacing * AssetRFactor * 1e-6
         if dcm_tags.GE_EFFECTIVE_ECHO_SPACING in dataset and dcm_tags.GE_ASSET_R_FACTOR in dataset:
             try:
-                eff_echo = float(dataset.get(dcm_tags.GE_EFFECTIVE_ECHO_SPACING, None).value)
+                effective_echo_spacing = float(dataset.get(dcm_tags.GE_EFFECTIVE_ECHO_SPACING, None).value)
                 asset = float(dataset.get(dcm_tags.GE_ASSET_R_FACTOR, None).value)
-                bids_ge["EffectiveEchoSpacing"] = eff_echo * asset * 1e-6
+                bids_ge["EffectiveEchoSpacing"] = effective_echo_spacing * asset * 1e-6
             except Exception:
                 pass
 
@@ -48,8 +46,8 @@ class GEBaseSequence(BaseSequence):
         ):
             try:
                 acq_matrix = dataset.get(dcm_tags.GE_ACQUISITION_MATRIX, None).value[0]
-                eff_echo = bids_ge["EffectiveEchoSpacing"]
-                bids_ge["TotalReadoutTime"] = (acq_matrix - 1) * eff_echo
+                effective_echo_spacing = bids_ge["EffectiveEchoSpacing"]
+                bids_ge["TotalReadoutTime"] = (acq_matrix - 1) * effective_echo_spacing
             except Exception:
                 pass
         

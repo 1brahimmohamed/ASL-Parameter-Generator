@@ -96,6 +96,6 @@ class GEMultiPLD(GEASLBase):
                 bids["PostLabelingDelay"] = PLD_lin
         
         # ASLcontext: all deltaM, last one is m0scan
-        bids["ASLContext"] = self._generate_asl_context(npld if npld else 2)
-        
-        return bids 
+        asl_context = self._generate_asl_context(npld if npld else 2)
+
+        return bids, asl_context
