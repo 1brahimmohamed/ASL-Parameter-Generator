@@ -11,6 +11,7 @@ import { getReport } from "@/services/apiReport";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IAllRelevantFilesType } from "@/types";
+import { handleBidsUpload, handleDicomUpload } from "./uploadHandlers";
 
 type TUploadDataOptions = (typeof UploadDataType)[keyof typeof UploadDataType];
 type TUploadModalOptions =
@@ -19,7 +20,7 @@ type TUploadModalOptions =
 
 const UploadButtons = () => {
   const [activeFileTypeOption, setActiveFileTypeOption] =
-    useState<TUploadDataOptions>(UploadDataType.BDIS);
+    useState<TUploadDataOptions>(UploadDataType.BIDS);
   const [activeModalityTypeOption, setActiveModalityTypeOption] =
     useState<TUploadModalOptions>(UploadModalityType.ASL);
   const folderInputRef = useRef<HTMLInputElement>(null);
@@ -31,79 +32,49 @@ const UploadButtons = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const files: FileList | null = e.target.files;
+    let data = null;
 
     if (files && files.length > 0) {
-      setIsLoading(true);
-      try {
-        const filesArray = Array.from(files);
 
-        const niftiFile = findNiftiFile(filesArray);
-        const aslRelevantFiles = findRelevantFiles(filesArray);
-
-        const allRelevantFiles: IAllRelevantFilesType = {
-          nifti_file: niftiFile,
-          asl_files: aslRelevantFiles,
-          dicom_files: [],
-        };
-
-        const formData = new FormData();
-        if (niftiFile) {
-          formData.append("nifti_file", niftiFile);
-        }
-        filesArray.forEach((file) => {
-          if (file.name.endsWith(".dcm")) {
-            formData.append("dcm_files", file);
-            allRelevantFiles.dicom_files.push(file);
-          }
+      if (activeFileTypeOption === UploadDataType.DICOM) {
+        data = await handleDicomUpload({
+          files,
+          setIsLoading,
+          activeModalityTypeOption,
         });
-        aslRelevantFiles.forEach((file) => {
-          formData.append("files", file);
-          formData.append("filenames", file.name);
-        });
-
-
-        // Store files and config for potential re-upload
-        setUploadedFiles(allRelevantFiles);
-        
-        setUploadConfig({
-          modalityType: activeModalityTypeOption,
-          fileType: activeFileTypeOption,
-        });
-
-        // Clear any previously updated JSON content when new files are uploaded
-        setUpdatedJsonContent(null);
-        setUpdatedJsonFilename('');
-
-        formData.append("modality_type", activeModalityTypeOption);
-        formData.append("files_type", activeFileTypeOption);
-
-        console.log("Uploaded formdata structure:", formData);
-        const data = await getReport(formData);
-        setIsLoading(false);
-        if (data) {
-          setApiData(data);
-          if (
-            data.missing_required_parameters &&
-            data.missing_required_parameters.length > 0
-          ) {
-            toast.info(
-              "Report generated with missing parameters. Please provide the missing values."
-            );
-          } else {
-            toast.success("Report generated successfully!");
-          }
-          router.push("/report");
-        } else {
-          toast.error(
-            "Failed to generate report. Please check the files and try again."
-          );
-        }
-      } catch (error) {
-        setIsLoading(false);
-        toast.error(
-          `An unexpected error occurred during upload, please try again. Error: ${error}`
-        );
       }
+
+      else if (activeFileTypeOption === UploadDataType.BIDS) {
+        data = await handleBidsUpload({
+          files,
+          setIsLoading,
+          setUploadedFiles,
+          setUploadConfig,
+          setUpdatedJsonContent,
+          setUpdatedJsonFilename,
+          activeModalityTypeOption,
+        });
+      }
+    }
+
+    if (data) {
+      console.log("Data received from upload:", data);
+      setApiData(data);
+      if (
+        data.missing_required_parameters &&
+        data.missing_required_parameters.length > 0
+      ) {
+        toast.info(
+          "Report generated with missing parameters. Please provide the missing values."
+        );
+      } else {
+        toast.success("Report generated successfully!");
+      }
+      router.push("/report");
+    } else {
+      toast.error(
+        "Failed to generate report. Please check the files and try again."
+      );
     }
   };
 
@@ -149,11 +120,11 @@ const UploadButtons = () => {
             type="button"
             className={cn(
               "rounded-l-md rounded-r-none border border-input cursor-pointer",
-              activeFileTypeOption === UploadDataType.BDIS
+              activeFileTypeOption === UploadDataType.BIDS
                 ? "bg-primary text-primary-foreground"
                 : "bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
             )}
-            onClick={() => setActiveFileTypeOption(UploadDataType.BDIS)}
+            onClick={() => setActiveFileTypeOption(UploadDataType.BIDS)}
           >
             BDIS
           </Button>

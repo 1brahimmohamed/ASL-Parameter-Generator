@@ -1,5 +1,5 @@
 enum UploadDataType {
-    BDIS = 'BDIS',
+    BIDS = 'BIDS',
     DICOM = 'DICOM',
 }
 
