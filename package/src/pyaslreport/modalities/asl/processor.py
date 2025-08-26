@@ -510,7 +510,7 @@ class ASLProcessor(BaseProcessor):
         parameters = self._prepare_parameters(context, M0_TR, reports)
 
         required_condition_schema = config['schemas']['required_condition_schema']
-        missing_required_parameters = []
+        missing_required_parameters: Dict[str, str] = {}
         for idx, session in enumerate(context.asl_json_data):
             asl_type = session.get('ArterialSpinLabelingType', None)
             for param, condition in required_condition_schema.items():
@@ -525,7 +525,9 @@ class ASLProcessor(BaseProcessor):
                     if asl_type and asl_type in asl_type_list:
                         is_required = True
                 if is_required and param not in session:
-                    missing_required_parameters.append(param)
+                    param_units = config['schemas'].get('param_units', {}) or {}
+                    unit = param_units.get(param, '-') if isinstance(param_units, dict) else '-'
+                    missing_required_parameters[param] = unit
 
         return {
             "major_errors": combined_major_errors,

@@ -13,10 +13,10 @@ import { toast } from "sonner";
 export default function MissingParameters() {
   const { apiData, uploadedFiles, uploadConfig, setIsLoading, setApiData, setUpdatedJsonContent, setUpdatedJsonFilename } =
     useAppContext();
-  const missingParams = apiData?.missing_required_parameters || [];
+  const missingParamsMap = apiData?.missing_required_parameters || {};
+  const missingParams = Object.keys(missingParamsMap);
   const [paramValues, setParamValues] = useState<Record<string, string>>({});
 
-  // ...existing code...
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,7 +158,7 @@ export default function MissingParameters() {
         formData.append("filenames", file.name);
       });
 
-      formData.append("modality_type", uploadConfig.modalityType);
+      formData.append("modality", uploadConfig.modalityType);
       formData.append("files_type", uploadConfig.fileType);
 
       console.log("FormData entries:");
@@ -172,7 +172,7 @@ export default function MissingParameters() {
 
       console.log("Uploaded formdata structure:", formData.entries());
 
-      const data = await getReport(formData);
+      const data = await getReport(formData, uploadConfig.fileType.toLocaleLowerCase());
       setIsLoading(false);
 
       if (data) {
@@ -182,13 +182,12 @@ export default function MissingParameters() {
         // Check if there are still missing parameters
         if (
           data.missing_required_parameters &&
-          data.missing_required_parameters.length > 0
+          Object.keys(data.missing_required_parameters).length > 0
         ) {
-          toast.info(
-            `Some parameters are still missing: ${data.missing_required_parameters.join(
-              ", "
-            )}`
-          );
+          const list = Object.entries(data.missing_required_parameters)
+            .map(([param, unit]) => (unit && unit !== '-' ? `${param} (${unit})` : param))
+            .join(', ');
+          toast.info(`Some parameters are still missing: ${list}`);
         } else {
           toast.success(
             "Report regenerated successfully with updated parameters!"
@@ -247,6 +246,7 @@ export default function MissingParameters() {
         </p>
         <ul className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1 mb-2">
           {missingParams.map((param) => {
+            const unit = missingParamsMap[param] || '-';
             const filled = paramValues[param] && paramValues[param].trim();
             return (
               <li
@@ -263,18 +263,23 @@ export default function MissingParameters() {
                     {param}
                   </span>
                 </div>
-                <Input
-                  className="border-none px-1 py-0 h-7 text-sm focus:ring-0 focus-visible:ring-0 focus:border-none focus:outline-none shadow-none max-w-52 text-left"
-                  style={{ minWidth: 0 }}
-                  placeholder="Enter value"
-                  value={paramValues[param] || ""}
-                  onChange={(e) =>
-                    setParamValues((prev) => ({
-                      ...prev,
-                      [param]: e.target.value,
-                    }))
-                  }
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    className="border-none px-1 py-0 h-7 text-sm focus:ring-0 focus-visible:ring-0 focus:border-none focus:outline-none shadow-none max-w-52 text-left"
+                    style={{ minWidth: 0 }}
+                    placeholder="Enter value"
+                    value={paramValues[param] || ""}
+                    onChange={(e) =>
+                      setParamValues((prev) => ({
+                        ...prev,
+                        [param]: e.target.value,
+                      }))
+                    }
+                  />
+                  <span className="text-xs text-muted-foreground w-10 text-right" title={unit}>
+                    {unit}
+                  </span>
+                </div>
               </li>
             );
           })}

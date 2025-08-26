@@ -13,31 +13,16 @@ const client = axios.create({
  * @param formData - The FormData object containing the files to be processed.
  * @return IReportApiResponse - A promise that resolves to the report data.
  */
-const getReport = async (formData: FormData): Promise<IReportApiResponse> => {
+const getReport = async (formData: FormData, type: string): Promise<IReportApiResponse> => {
     try {
         const response = await client.post(
-            '/process',
+            `/process/${type}`,
             formData
         );
 
         return response.data;
     } catch (error) {
         console.error('Error fetching report:', error);
-        throw error;
-    }
-}
-
-/**
- * Submits missing parameters to the backend.
- * @param missingParams - The missing parameters to be submitted.
- * @return IReportApiResponse - A promise that resolves to the report data.
- */
-const postMissingParameters = async (missingParams: { [key: string]: string }) => {
-    try {
-        const response = await client.post('/missing-parameters', {missingParams});
-        return response.data;
-    } catch (error) {
-        console.error('Error submitting missing parameters:', error);
         throw error;
     }
 }
@@ -83,7 +68,6 @@ const downloadUpdatedJson = (jsonContent: Record<string, unknown>, filename: str
 
 export {
     getReport,
-    postMissingParameters,
     getReportPdf,
     downloadUpdatedJson,
 }

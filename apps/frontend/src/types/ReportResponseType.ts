@@ -21,7 +21,7 @@ interface IReportApiResponse {
     warnings: Record<string, unknown>;
     warnings_concise: Record<string, unknown>;
     warnings_concise_text: string;
-    missing_required_parameters: string[];
+    missing_required_parameters: Record<string, string>;
 }
 
 export default IReportApiResponse;
