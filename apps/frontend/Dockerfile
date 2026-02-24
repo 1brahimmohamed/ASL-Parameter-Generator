@@ -1,5 +1,5 @@
 # 1. Install dependencies only when needed
-FROM node:18-alpine AS deps
+FROM node:20-alpine AS deps
 
 WORKDIR /app
 
