@@ -43,7 +43,7 @@ const NavData: {
         },
         {
             title: "Convert DICOM to BIDS",
-            url: "/convert/dcm-to-BIDS",
+            url: "/convert/dcm-to-bids",
             icon: IconTransform,
             showCount: false,
         }
