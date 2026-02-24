@@ -19,4 +19,22 @@ class SiemensBasicSinglePLD(SiemensBaseSequence):
             bids["LabelingDuration"] = d.get(dcm_tags.GE_LABEL_DURATION, None).value
         if dcm_tags.GE_INVERSION_TIME in d:
             bids["PostLabelingDelay"] = d.get(dcm_tags.GE_INVERSION_TIME, None).value
-        return bids 
+
+        asl_context = self._generate_asl_context(1)
+        return bids, asl_context
+
+    def _generate_asl_context(self, npld: int) -> list:
+        """
+        Generate ASLContext for Siemens sequences.
+        For single-PLD: one deltaM volume followed by one m0scan.
+
+        Args:
+            npld: Number of post-labeling delays
+
+        Returns:
+            list: ASLContext array
+        """
+        if npld == 1:
+            return ["deltaM", "m0scan"]
+        else:
+            return ["deltaM"] * (npld - 1) + ["m0scan"]
