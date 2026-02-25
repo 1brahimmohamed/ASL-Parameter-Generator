@@ -252,10 +252,16 @@ class ASLProcessor(BaseProcessor):
     def _convert_units_to_milliseconds(self, session: Dict[str, Any]) -> None:
         """
         Convert time-related fields from seconds to milliseconds.
+        Includes a heuristic guard: if a value is > 100, it is assumed
+        to already be in milliseconds (no ASL timing parameter exceeds
+        ~50 seconds), and the conversion is skipped to prevent
+        double-conversion corruption.
         
         Args:
             session: ASL session data dictionary.
         """
+        ALREADY_MS_THRESHOLD = 100  # No ASL timing param exceeds ~50 seconds
+
         time_fields = [
             'EchoTime', 'RepetitionTimePreparation', 'LabelingDuration',
             'BolusCutOffDelayTime', 'BackgroundSuppressionPulseTime', 'PostLabelingDelay'
@@ -263,7 +269,29 @@ class ASLProcessor(BaseProcessor):
         
         for key in time_fields:
             if key in session:
-                session[key] = UnitConverterUtils.convert_to_milliseconds(session[key])
+                value = session[key]
+                if self._is_already_milliseconds(value, ALREADY_MS_THRESHOLD):
+                    continue
+                session[key] = UnitConverterUtils.convert_to_milliseconds(value)
+
+    @staticmethod
+    def _is_already_milliseconds(value, threshold: float) -> bool:
+        """
+        Check if a value (or all values in a list) appear to already
+        be in milliseconds based on a threshold.
+        
+        Args:
+            value: A single numeric value or a list of numeric values.
+            threshold: Values above this are assumed to be in ms already.
+            
+        Returns:
+            True if the value(s) appear to already be in milliseconds.
+        """
+        if isinstance(value, (int, float)):
+            return value > threshold
+        elif isinstance(value, list) and value:
+            return all(isinstance(v, (int, float)) and v > threshold for v in value)
+        return False
 
     def _validate_m0_and_tsv_data(self, grouped_files: List[Dict[str, Any]], context: ProcessingContext, file_format: str) -> None:
         """
