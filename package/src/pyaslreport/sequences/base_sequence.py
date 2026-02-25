@@ -26,10 +26,17 @@ class BaseSequence(ABC):
         return 0
 
     @abstractmethod
-    def extract_bids_metadata(self) -> tuple:
-        """Extract and convert DICOM metadata to BIDS fields.
-        Returns a tuple of (metadata_dict, asl_context_list)."""
+    def extract_bids_metadata(self) -> dict:
+        """Extract and convert DICOM metadata to BIDS fields."""
         pass
+
+    def generate_asl_context(self) -> list:
+        """
+        Generate ASL context labels for the sequence.
+        Override in subclasses that support ASL context generation.
+        Returns an empty list by default for sequences that don't support it.
+        """
+        return []
 
     def _extract_common_metadata(self) -> dict:
         """Extract and convert common DICOM metadata fields to BIDS fields, including ms->s conversion where needed."""
@@ -70,11 +77,12 @@ class BaseSequence(ABC):
         nifti_path = DICOM2NiFTIConverter.dir_to_nifti(dicom_dir, output_dir, bids_basename, overwrite)
 
         # 2. Extract metadata and write JSON
-        metadata, asl_context = self.extract_bids_metadata()
+        metadata = self.extract_bids_metadata()
         JSONWriter.write(metadata, os.path.join(output_dir, f"{bids_basename}.json"))
 
         # 3. Generate aslcontext.tsv
-        TsvWriter.write(asl_context, os.path.join(output_dir, f"{bids_basename}_aslcontext.tsv"))
+        context = self.generate_asl_context()
+        TsvWriter.write(context, os.path.join(output_dir, f"{bids_basename}_aslcontext.tsv"))
 
         return {
             "nifti": nifti_path,

@@ -32,6 +32,9 @@ class GEMultiPLD(GEASLBase):
                 npld = int(npld)
             except Exception:
                 npld = None
+
+        # Store npld for generate_asl_context() to use
+        self._npld = npld
                 
         if npld == 1:
             # Single-PLD
@@ -95,7 +98,8 @@ class GEMultiPLD(GEASLBase):
                 bids["LabelingDuration"] = LD_lin
                 bids["PostLabelingDelay"] = PLD_lin
         
-        # ASLcontext: all deltaM, last one is m0scan
-        asl_context = self._generate_asl_context(npld if npld else 2)
+        return bids
 
-        return bids, asl_context
+    def generate_asl_context(self):
+        npld = getattr(self, '_npld', None)
+        return self._generate_asl_context(npld if npld else 2)

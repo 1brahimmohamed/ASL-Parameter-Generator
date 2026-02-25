@@ -24,7 +24,7 @@ def get_bids_metadata(data):
     """
     Converts the provided data to BIDS format.
     :param data: Dictionary containing modality data.
-    :return: BIDS-formatted data.
+    :return: Tuple of (metadata_dict, asl_context_list).
     """
     modality = data.get("modality")
     dicom_dir = data.get("dicom_dir")
@@ -34,7 +34,10 @@ def get_bids_metadata(data):
     if sequence is None:
         raise ValueError(f"No matching sequence found for modality '{modality}' with the provided DICOM header")
     
-    return sequence.extract_bids_metadata()
+    metadata = sequence.extract_bids_metadata()
+    asl_context = sequence.generate_asl_context()
+    
+    return metadata, asl_context
 
 
 def get_dicom_header(dicom_dir: str):

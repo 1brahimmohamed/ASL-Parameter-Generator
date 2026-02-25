@@ -22,8 +22,7 @@ class GEBasicSinglePLD(GEASLBase):
         if dcm_tags.GE_INVERSION_TIME in dicom_header:
             bids["PostLabelingDelay"] = dicom_header.get(dcm_tags.GE_INVERSION_TIME, None).value
 
+        return bids
 
-        asl_context = self._generate_asl_context(1)
-
-        return bids, asl_context
-
+    def generate_asl_context(self):
+        return self._generate_asl_context(1)
