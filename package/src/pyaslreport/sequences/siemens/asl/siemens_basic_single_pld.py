@@ -19,4 +19,4 @@ class SiemensBasicSinglePLD(SiemensBaseSequence):
             bids["LabelingDuration"] = d.get(dcm_tags.GE_LABEL_DURATION, None).value
         if dcm_tags.GE_INVERSION_TIME in d:
             bids["PostLabelingDelay"] = d.get(dcm_tags.GE_INVERSION_TIME, None).value
-        return bids 
+        return bids

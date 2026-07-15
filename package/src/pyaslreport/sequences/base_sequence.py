@@ -30,6 +30,14 @@ class BaseSequence(ABC):
         """Extract and convert DICOM metadata to BIDS fields."""
         pass
 
+    def generate_asl_context(self) -> list:
+        """
+        Generate ASL context labels for the sequence.
+        Override in subclasses that support ASL context generation.
+        Returns an empty list by default for sequences that don't support it.
+        """
+        return []
+
     def _extract_common_metadata(self) -> dict:
         """Extract and convert common DICOM metadata fields to BIDS fields, including ms->s conversion where needed."""
         dataset = self.dicom_header
@@ -73,7 +81,7 @@ class BaseSequence(ABC):
         JSONWriter.write(metadata, os.path.join(output_dir, f"{bids_basename}.json"))
 
         # 3. Generate aslcontext.tsv
-        context = self.generate_asl_context(nifti_path)
+        context = self.generate_asl_context()
         TsvWriter.write(context, os.path.join(output_dir, f"{bids_basename}_aslcontext.tsv"))
 
         return {
