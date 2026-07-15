@@ -124,7 +124,7 @@ const UploadButtons = () => {
             )}
             onClick={() => setActiveFileTypeOption(UploadDataType.BIDS)}
           >
-            BDIS
+            BIDS
           </Button>
           <Button
             type="button"
