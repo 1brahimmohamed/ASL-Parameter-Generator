@@ -4,6 +4,11 @@ import { UploadModalityType, UploadDataType } from "@/enums";
 import { findNiftiFile, findRelevantFiles } from "@/utils";
 import { IAllRelevantFilesType } from "@/types";
 
+type UploadConfig = {
+  modalityType: string;
+  fileType: string;
+};
+
 const handleDicomUpload = async ({
   files,
   setIsLoading,
@@ -22,7 +27,7 @@ const handleDicomUpload = async ({
       (file) =>
         file.name.endsWith(".dcm") ||
         file.name.endsWith(".img") ||
-        !file.name.includes(".")
+        !file.name.includes("."),
     );
 
     const formData = new FormData();
@@ -38,16 +43,13 @@ const handleDicomUpload = async ({
     setIsLoading(false);
 
     return data;
-
   } catch (error) {
-
     setIsLoading(false);
     toast.error(
-      `An unexpected error occurred during upload, please try again. Error: ${error}`
+      `An unexpected error occurred during upload, please try again. Error: ${error}`,
     );
-
   }
-}
+};
 
 const handleBidsUpload = async ({
   files,
@@ -61,8 +63,8 @@ const handleBidsUpload = async ({
   files: FileList;
   setIsLoading: (v: boolean) => void;
   setUploadedFiles: (files: IAllRelevantFilesType) => void;
-  setUploadConfig: (config: any) => void;
-  setUpdatedJsonContent: (content: any) => void;
+  setUploadConfig: (config: UploadConfig | null) => void;
+  setUpdatedJsonContent: (content: Record<string, unknown> | null) => void;
   setUpdatedJsonFilename: (filename: string) => void;
   activeModalityTypeOption: UploadModalityType;
 }) => {
@@ -106,7 +108,7 @@ const handleBidsUpload = async ({
     });
 
     setUpdatedJsonContent(null);
-    setUpdatedJsonFilename('');
+    setUpdatedJsonFilename("");
 
     formData.append("modality", activeModalityTypeOption);
 
@@ -115,16 +117,12 @@ const handleBidsUpload = async ({
     setIsLoading(false);
 
     return data;
-
   } catch (error) {
     setIsLoading(false);
     toast.error(
-      `An unexpected error occurred during upload, please try again. Error: ${error}`
+      `An unexpected error occurred during upload, please try again. Error: ${error}`,
     );
   }
-}
+};
 
-export {
-  handleDicomUpload,
-  handleBidsUpload
-}
+export { handleDicomUpload, handleBidsUpload };
