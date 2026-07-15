@@ -60,9 +60,10 @@ const UploadButtons = () => {
     if (data) {
       console.log("Data received from upload:", data);
       setApiData(data);
+      const hasMissingRequiredParameters =
+        Object.keys(data.missing_required_parameters ?? {}).length > 0;
       if (
-        data.missing_required_parameters &&
-        data.missing_required_parameters.length > 0
+        hasMissingRequiredParameters
       ) {
         toast.info(
           "Report generated with missing parameters. Please provide the missing values."
