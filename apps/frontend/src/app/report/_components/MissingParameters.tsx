@@ -6,17 +6,23 @@ import { useAppContext } from "@/providers/AppProvider";
 import React, { useState } from "react";
 import { Check, AlertCircle } from "lucide-react";
 import { getReport } from "@/services/apiReport";
-import {ASLRelevantFileNames} from '@/enums';
+import { ASLRelevantFileNames } from "@/enums";
 
 import { toast } from "sonner";
 
 export default function MissingParameters() {
-  const { apiData, uploadedFiles, uploadConfig, setIsLoading, setApiData, setUpdatedJsonContent, setUpdatedJsonFilename } =
-    useAppContext();
+  const {
+    apiData,
+    uploadedFiles,
+    uploadConfig,
+    setIsLoading,
+    setApiData,
+    setUpdatedJsonContent,
+    setUpdatedJsonFilename,
+  } = useAppContext();
   const missingParamsMap = apiData?.missing_required_parameters || {};
   const missingParams = Object.keys(missingParamsMap);
   const [paramValues, setParamValues] = useState<Record<string, string>>({});
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,8 +40,8 @@ export default function MissingParameters() {
 
     const filledParams = Object.fromEntries(
       Object.entries(paramValues).filter(
-        ([k, v]) => v && missingParams.includes(k)
-      )
+        ([k, v]) => v && missingParams.includes(k),
+      ),
     );
 
     // Convert string values to appropriate types
@@ -71,7 +77,7 @@ export default function MissingParameters() {
         }
 
         return [key, value];
-      })
+      }),
     );
 
     console.log("Missing params:", missingParams);
@@ -107,7 +113,7 @@ export default function MissingParameters() {
                     [JSON.stringify(updatedContent, null, 2)],
                     {
                       type: "application/json",
-                    }
+                    },
                   );
 
                   const updatedFile = new File([updatedBlob], file.name, {
@@ -125,7 +131,7 @@ export default function MissingParameters() {
             });
           }
           return file;
-        })
+        }),
       );
 
       // ...existing code for FormData creation and API call...
@@ -172,7 +178,10 @@ export default function MissingParameters() {
 
       console.log("Uploaded formdata structure:", formData.entries());
 
-      const data = await getReport(formData, uploadConfig.fileType.toLocaleLowerCase());
+      const data = await getReport(
+        formData,
+        uploadConfig.fileType.toLocaleLowerCase(),
+      );
       setIsLoading(false);
 
       if (data) {
@@ -185,12 +194,14 @@ export default function MissingParameters() {
           Object.keys(data.missing_required_parameters).length > 0
         ) {
           const list = Object.entries(data.missing_required_parameters)
-            .map(([param, unit]) => (unit && unit !== '-' ? `${param} (${unit})` : param))
-            .join(', ');
+            .map(([param, unit]) =>
+              unit && unit !== "-" ? `${param} (${unit})` : param,
+            )
+            .join(", ");
           toast.info(`Some parameters are still missing: ${list}`);
         } else {
           toast.success(
-            "Report regenerated successfully with updated parameters!"
+            "Report regenerated successfully with updated parameters!",
           );
         }
       } else {
@@ -216,14 +227,14 @@ export default function MissingParameters() {
           toast.error(`Server error: ${axiosError.response.data.message}`);
         } else {
           toast.error(
-            `Server error (${axiosError.response.status}): Please check the server logs`
+            `Server error (${axiosError.response.status}): Please check the server logs`,
           );
         }
       } else {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
         toast.error(
-          `An error occurred while updating parameters: ${errorMessage}`
+          `An error occurred while updating parameters: ${errorMessage}`,
         );
       }
     }
@@ -246,7 +257,7 @@ export default function MissingParameters() {
         </p>
         <ul className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1 mb-2">
           {missingParams.map((param) => {
-            const unit = missingParamsMap[param] || '-';
+            const unit = missingParamsMap[param] || "-";
             const filled = paramValues[param] && paramValues[param].trim();
             return (
               <li
@@ -276,7 +287,10 @@ export default function MissingParameters() {
                       }))
                     }
                   />
-                  <span className="text-xs text-muted-foreground w-10 text-right" title={unit}>
+                  <span
+                    className="text-xs text-muted-foreground w-10 text-right"
+                    title={unit}
+                  >
                     {unit}
                   </span>
                 </div>
@@ -289,14 +303,14 @@ export default function MissingParameters() {
         <Button
           type="submit"
           disabled={missingParams.some(
-            (param) => !(paramValues[param] && paramValues[param].trim())
+            (param) => !(paramValues[param] && paramValues[param].trim()),
           )}
           className="w-full mt-auto"
         >
           Regenerate Report with Parameters (
           {
             Object.keys(paramValues).filter(
-              (k) => paramValues[k] && paramValues[k].trim()
+              (k) => paramValues[k] && paramValues[k].trim(),
             ).length
           }
           /{missingParams.length})
